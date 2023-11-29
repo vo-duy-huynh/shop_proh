@@ -1,43 +1,47 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const { productSchema } = require("./product");
 
-const userSchema = new mongoose.Schema({
-    name: {
-        required: true,
-        type: String,
-        trim: true
+const userSchema = mongoose.Schema({
+  name: {
+    required: true,
+    type: String,
+    trim: true,
+  },
+  email: {
+    required: true,
+    type: String,
+    trim: true,
+    validate: {
+      validator: (value) => {
+        const re =
+          /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        return value.match(re);
+      },
+      message: "Hãy nhập đúng định dạng email",
     },
-    email: {
-        required: true,
-        type: String,
-        trim: true,
-        validate: {
-            validator: (value) => {
-                const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-                return value.match(re);
-            },
-            message: "Hãy nhập một email hợp lệ!",
-        },
+  },
+  password: {
+    required: true,
+    type: String,
+  },
+  address: {
+    type: String,
+    default: "",
+  },
+  type: {
+    type: String,
+    default: "user",
+  },
+  cart: [
+    {
+      product: productSchema,
+      quantity: {
+        type: Number,
+        default: 0,
+      },
     },
-    password: {
-        required: true,
-        type: String,
-        validate: {
-            validator: (value) => {
-                this.length >= 6;
-            },
-            message: "Mật khẩu phải có ít nhất 6 ký tự!",
-        },
-    },
-    address: {
-        type: String,
-        default: "",
-    },
-    type: {
-        type: String,
-        default: "user",
-    },
+  ],
 });
 
-const User = mongoose.model('User', userSchema);
-
+const User = mongoose.model("User", userSchema);
 module.exports = User;
