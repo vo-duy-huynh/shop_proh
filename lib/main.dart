@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_proh/common/widgets/bottom_bar.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
+import 'package:shop_proh/features/admin/screens/admin_screen.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
 import 'package:shop_proh/features/auth/services/auth_service.dart';
 import 'package:shop_proh/home/screens/home_screen.dart';
@@ -55,7 +56,9 @@ class _MyAppState extends State<MyApp> {
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: Provider.of<UserProvider>(context).user.token.isNotEmpty
-          ? const BottomBar()
+          ? Provider.of<UserProvider>(context).user.type == 'user'
+              ? const BottomBar()
+              : const AdminScreen()
           : const AuthScreen(),
     );
   }

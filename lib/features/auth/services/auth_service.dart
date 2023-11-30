@@ -7,7 +7,7 @@ import 'package:shop_proh/common/widgets/bottom_bar.dart';
 import 'package:shop_proh/constants/error_handling.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/constants/ultils.dart';
-import 'package:shop_proh/home/screens/home_screen.dart';
+import 'package:shop_proh/features/auth/screens/auth_screen.dart';
 import 'package:shop_proh/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_proh/providers/user_provider.dart';
@@ -28,6 +28,7 @@ class AuthService {
         address: '',
         type: '',
         token: '',
+        cart: [],
       );
       http.Response res = await http.post(
         Uri.parse('$uri/api/signup'),
@@ -123,6 +124,21 @@ class AuthService {
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(userRes.body);
       }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void logOut(BuildContext context) async {
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      await sharedPreferences.setString('x-auth-token', '');
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AuthScreen.routeName,
+        (route) => false,
+      );
     } catch (e) {
       showSnackBar(context, e.toString());
     }
