@@ -1,0 +1,58 @@
+[
+    {
+      "_id": "65668ad041c55157250ba3e6",
+      "name": "IPHONE 15",
+      "description": "oke",
+      "images": [
+        "https://res.cloudinary.com/dvcwwbrqw/image/upload/v1701219022/IPHONE%2015/ua5kxegqkt6hmjgyqfsf.jpg",
+        "https://res.cloudinary.com/dvcwwbrqw/image/upload/v1701219024/IPHONE%2015/iozdvxcritrmngvzlrup.jpg"
+      ],
+      "quantity": 20,
+      "price": 24259000,
+      "category": "Mobiles",
+      "__v": 13,
+      "ratings": [
+        {
+          "userId": "6564dc55318d89e013cd0f4c",
+          "rating": 3,
+          "_id": "6566aee2fec1a60bdbd0133c"
+        },
+        {
+          "userId": "6566c4cb1a0638286aaadf71",
+          "rating": 5,
+          "_id": "6566f3b3a83e2ca7e8afb018"
+        }
+      ]
+    },
+    {
+      "_id": "656698e6de9dfeecfc34b019",
+      "name": "Áo có mũ",
+      "description": "ok",
+      "images": [
+        "https://res.cloudinary.com/dvcwwbrqw/image/upload/v1701222626/%C3%81o%20c%C3%B3%20m%C5%A9/lpjycjejssjsfjivmwye.jpg",
+        "https://res.cloudinary.com/dvcwwbrqw/image/upload/v1701222627/%C3%81o%20c%C3%B3%20m%C5%A9/lw1tsrndacvjq5gnzijb.jpg",
+        "https://res.cloudinary.com/dvcwwbrqw/image/upload/v1701222628/%C3%81o%20c%C3%B3%20m%C5%A9/ws4vtzvei7z8a8yltp13.jpg"
+      ],
+      "quantity": 2500,
+      "price": 145000,
+      "category": "Fashion",
+      "__v": 37,
+      "ratings": [
+        {
+          "userId": "6564dc55318d89e013cd0f4c",
+          "rating": 5,
+          "_id": "6566af0dfec1a60bdbd01370"
+        },
+        {
+          "userId": "6566bf3216e509c4b503a3f8",
+          "rating": 4,
+          "_id": "6566c4a71a0638286aaadf61"
+        },
+        {
+          "userId": "6566c4cb1a0638286aaadf71",
+          "rating": 3.5,
+          "_id": "6567dc2337e282373e03cc6a"
+        }
+      ]
+    }
+  ]
