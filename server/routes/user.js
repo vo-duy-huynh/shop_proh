@@ -4,6 +4,7 @@ const auth = require("../middlewares/auth");
 // const Order = require("../models/order");
 const { Product } = require("../models/product");
 const User = require("../models/user");
+const Order = require("../models/order");
 
 userRouter.post("/api/add-to-cart", auth, async (req, res) => {
   try {
@@ -73,7 +74,7 @@ userRouter.post("/api/save-user-address", auth, async (req, res) => {
 
 userRouter.post("/api/order", auth, async (req, res) => {
   try {
-    const { cart, totalPrice, address, date } = req.body;
+    const { cart, totalPrice, address, date, phoneNumber } = req.body;
     let products = [];
 
     for (let i = 0; i < cart.length; i++) {
@@ -98,6 +99,7 @@ userRouter.post("/api/order", auth, async (req, res) => {
       totalPrice,
       date,
       address,
+      phoneNumber,
       userId: req.user,
       orderedAt: new Date().getTime(),
     });
@@ -117,4 +119,14 @@ userRouter.get("/api/orders/me", auth, async (req, res) => {
   }
 });
 
+
+// get cart of user'
+userRouter.get("/api/cart", auth, async (req, res) => {
+  try {
+    let user = await User.findById(req.user);
+    res.json(user.cart);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 module.exports = userRouter;

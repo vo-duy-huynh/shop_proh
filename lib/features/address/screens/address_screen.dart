@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_proh/common/widgets/custom_button.dart';
 import 'package:shop_proh/common/widgets/custom_textfield.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/constants/ultils.dart';
@@ -30,9 +31,9 @@ class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController dateController = TextEditingController();
   final _addressFormKey = GlobalKey<FormState>();
   String addressToBeUsed = "";
+  bool isPressed = false;
   List<PaymentItem> paymentItems = [];
   final AddressServices addressServices = AddressServices();
-  late final Future<PaymentConfiguration> _googlePayConfigFuture;
 
   @override
   void initState() {
@@ -45,7 +46,6 @@ class _AddressScreenState extends State<AddressScreen> {
         status: PaymentItemStatus.final_price,
       ),
     );
-    _googlePayConfigFuture = PaymentConfiguration.fromAsset('gpay.json');
   }
 
   @override
@@ -57,7 +57,7 @@ class _AddressScreenState extends State<AddressScreen> {
     dateController.dispose();
   }
 
-  void onApplePayResult(res) {
+  void onApp(res) {
     if (Provider.of<UserProvider>(context, listen: false)
         .user
         .address
@@ -68,6 +68,7 @@ class _AddressScreenState extends State<AddressScreen> {
     addressServices.placeOrder(
       context: context,
       address: addressToBeUsed,
+      phoneNumber: phoneController.text,
       date: dateController.text,
       totalSum: double.parse(widget.totalAmount),
     );
@@ -84,14 +85,15 @@ class _AddressScreenState extends State<AddressScreen> {
     addressServices.placeOrder(
       context: context,
       address: addressToBeUsed,
+      phoneNumber: phoneController.text,
       date: dateController.text,
       totalSum: double.parse(widget.totalAmount),
     );
   }
 
   void payPressed(String addressFromProvider) {
+    // Initialize the address to be used
     addressToBeUsed = "";
-
     bool isForm = addressController.text.isNotEmpty ||
         nameController.text.isNotEmpty ||
         phoneController.text.isNotEmpty ||
@@ -100,62 +102,22 @@ class _AddressScreenState extends State<AddressScreen> {
     if (isForm) {
       if (_addressFormKey.currentState!.validate()) {
         addressToBeUsed = addressController.text;
+        isPressed = true;
       } else {
-        throw Exception('Hãy nhập đầy đủ thông tin');
+        isPressed = false;
+        showSnackBar(context, 'Vui lòng nhập đầy đủ thông tin');
       }
-    } else if (addressFromProvider.isNotEmpty) {
+    } else if (addressFromProvider.isNotEmpty && !isForm) {
       addressToBeUsed = addressFromProvider;
+      showSnackBar(context, 'Vui lòng nhập đầy đủ thông tin');
+      isPressed = false;
     } else {
       showSnackBar(context, 'Lỗi');
+      isPressed = false;
     }
   }
 
-  var applePayButton = ApplePayButton(
-    paymentConfiguration: PaymentConfiguration.fromJsonString(defaultApplePay),
-    paymentItems: const [
-      PaymentItem(
-        label: 'Item A',
-        amount: '0.01',
-        status: PaymentItemStatus.final_price,
-      ),
-      PaymentItem(
-        label: 'Item B',
-        amount: '0.01',
-        status: PaymentItemStatus.final_price,
-      ),
-      PaymentItem(
-        label: 'Total',
-        amount: '0.02',
-        status: PaymentItemStatus.final_price,
-      )
-    ],
-    style: ApplePayButtonStyle.black,
-    width: double.infinity,
-    height: 50,
-    type: ApplePayButtonType.buy,
-    margin: const EdgeInsets.only(top: 15.0),
-    onPaymentResult: (result) => debugPrint('Payment Result $result'),
-    loadingIndicator: const Center(
-      child: CircularProgressIndicator(),
-    ),
-  );
   String os = Platform.operatingSystem;
-  var googlePayButton = GooglePayButton(
-    paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
-    paymentItems: const [
-      PaymentItem(
-        label: 'Total',
-        amount: '0.01',
-        status: PaymentItemStatus.final_price,
-      )
-    ],
-    type: GooglePayButtonType.pay,
-    margin: const EdgeInsets.only(top: 15.0),
-    onPaymentResult: (result) => debugPrint('Payment Result $result'),
-    loadingIndicator: const Center(
-      child: CircularProgressIndicator(),
-    ),
-  );
   @override
   Widget build(BuildContext context) {
     // const String defaultApplePayConfigString = 'applepay.json';
@@ -165,6 +127,7 @@ class _AddressScreenState extends State<AddressScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
+          title: const Text('Đặt hàng'),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: GlobalVariables.appBarGradient,
@@ -234,7 +197,49 @@ class _AddressScreenState extends State<AddressScreen> {
                   ],
                 ),
               ),
-              googlePayButton,
+              GooglePayButton(
+                paymentConfiguration:
+                    PaymentConfiguration.fromJsonString(defaultGooglePay),
+                paymentItems: paymentItems,
+                type: GooglePayButtonType.pay,
+                margin: const EdgeInsets.only(top: 15.0),
+                onPaymentResult: (result) =>
+                    debugPrint('Payment Result $result'),
+                onPressed: () {
+                  payPressed(address);
+                  if (isPressed == true) {
+                    onApp(context);
+                  }
+                },
+                loadingIndicator: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  payPressed(address);
+                  if (isPressed == true) {
+                    onApp(context);
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.yellow[700]!),
+                  fixedSize: MaterialStateProperty.all(
+                      const Size(double.infinity, 50)),
+                  foregroundColor: MaterialStateProperty.all(
+                      Color.fromARGB(255, 247, 245, 245)),
+                  textStyle: MaterialStateProperty.all(
+                    const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                child: const Text('Thanh toán khi nhận hàng'),
+              ),
             ],
           ),
         ),

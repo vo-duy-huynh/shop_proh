@@ -50,6 +50,7 @@ class AddressServices {
     required BuildContext context,
     required String address,
     required String date,
+    required String phoneNumber,
     required double totalSum,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -64,6 +65,7 @@ class AddressServices {
             'cart': userProvider.user.cart,
             'address': address,
             'date': date,
+            'phoneNumber': phoneNumber,
             'totalPrice': totalSum,
           }));
 

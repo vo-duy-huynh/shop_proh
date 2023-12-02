@@ -13,11 +13,11 @@ class TopButtons extends StatelessWidget {
         Row(
           children: [
             AccountButton(
-              text: 'Your Orders',
+              text: 'Đơn Hàng',
               onTap: () {},
             ),
             AccountButton(
-              text: 'Turn Seller',
+              text: 'Địa Chỉ',
               onTap: () {},
             ),
           ],
@@ -26,13 +26,13 @@ class TopButtons extends StatelessWidget {
         Row(
           children: [
             AccountButton(
-              text: 'Log Out',
+              text: 'Đăng Xuất',
               onTap: () {
                 AuthService().logOut(context);
               },
             ),
             AccountButton(
-              text: 'Your Wish List',
+              text: 'Yêu Thích',
               onTap: () {},
             ),
           ],
