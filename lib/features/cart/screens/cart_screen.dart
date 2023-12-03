@@ -118,7 +118,7 @@ class _CartScreenState extends State<CartScreen> {
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: CustomButton(
                 text: 'Đặt hàng với (${user.cart.length}) sản phẩm',
-                color: Color.fromARGB(255, 249, 249, 5),
+                color: Colors.yellow[600]!,
                 onTap: () {
                   navigateToAddressScreen(sum);
                 }),

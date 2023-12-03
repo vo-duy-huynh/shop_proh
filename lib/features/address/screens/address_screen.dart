@@ -1,20 +1,19 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-// import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_proh/common/widgets/custom_button.dart';
 import 'package:shop_proh/common/widgets/custom_textfield.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/constants/ultils.dart';
 import 'package:shop_proh/features/address/services/address_services.dart';
+import 'package:shop_proh/features/address/widgets/payment_configuration.dart';
 import 'package:shop_proh/providers/user_provider.dart';
-import 'package:shop_proh/payment_configuration.dart';
+import 'package:pay/pay.dart';
 
 class AddressScreen extends StatefulWidget {
   static const String routeName = '/address';
   final String totalAmount;
+
   const AddressScreen({
     Key? key,
     required this.totalAmount,
@@ -30,22 +29,22 @@ class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final _addressFormKey = GlobalKey<FormState>();
+
   String addressToBeUsed = "";
   bool isPressed = false;
-  // List<PaymentItem> paymentItems = [];
+  List<PaymentItem> paymentItems = [];
   final AddressServices addressServices = AddressServices();
 
   @override
   void initState() {
     super.initState();
-
-    // paymentItems.add(
-    //   PaymentItem(
-    //     amount: widget.totalAmount,
-    //     label: 'Tổng tiền',
-    //     status: PaymentItemStatus.final_price,
-    //   ),
-    // );
+    paymentItems.add(
+      PaymentItem(
+        amount: widget.totalAmount,
+        label: 'Tổng tiền',
+        status: PaymentItemStatus.final_price,
+      ),
+    );
   }
 
   @override
@@ -197,24 +196,19 @@ class _AddressScreenState extends State<AddressScreen> {
                   ],
                 ),
               ),
-              // GooglePayButton(
-              //   paymentConfiguration:
-              //       PaymentConfiguration.fromJsonString(defaultGooglePay),
-              //   paymentItems: paymentItems,
-              //   type: GooglePayButtonType.pay,
-              //   margin: const EdgeInsets.only(top: 15.0),
-              //   onPaymentResult: (result) =>
-              //       debugPrint('Payment Result $result'),
-              //   onPressed: () {
-              //     payPressed(address);
-              //     if (isPressed == true) {
-              //       onApp(context);
-              //     }
-              //   },
-              //   loadingIndicator: const Center(
-              //     child: CircularProgressIndicator(),
-              //   ),
-              // ),
+              GooglePayButton(
+                onPressed: () => payPressed(address),
+                paymentConfiguration:
+                    PaymentConfiguration.fromJsonString(defaultGooglePay),
+                onPaymentResult: onGooglePayResult,
+                paymentItems: paymentItems,
+                height: 50,
+                type: GooglePayButtonType.buy,
+                margin: const EdgeInsets.only(top: 15),
+                loadingIndicator: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
