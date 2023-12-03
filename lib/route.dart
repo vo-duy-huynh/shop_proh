@@ -3,6 +3,7 @@ import 'package:shop_proh/common/widgets/bottom_bar.dart';
 import 'package:shop_proh/features/address/screens/address_screen.dart';
 import 'package:shop_proh/features/admin/screens/add_product_screen.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
+import 'package:shop_proh/features/auth/screens/register_screen.dart';
 import 'package:shop_proh/features/cart/services/cart_services.dart';
 import 'package:shop_proh/features/order_details/screens/order_details.dart';
 import 'package:shop_proh/features/product_details/screens/product_details_screen.dart';
@@ -19,6 +20,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
+      );
+    case RegisterScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const RegisterScreen(),
       );
     case HomeScreen.routeName:
       return MaterialPageRoute(
