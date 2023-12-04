@@ -41,6 +41,11 @@ const userSchema = mongoose.Schema({
       },
     },
   ],
+  wishlist: [
+    {
+      product: productSchema,
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

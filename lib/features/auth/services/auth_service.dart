@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_proh/common/widgets/bottom_bar.dart';
@@ -8,6 +11,8 @@ import 'package:shop_proh/constants/error_handling.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/constants/ultils.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
+import 'package:shop_proh/home/screens/home_screen.dart';
+import 'package:shop_proh/main.dart';
 import 'package:shop_proh/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_proh/providers/user_provider.dart';
@@ -29,6 +34,7 @@ class AuthService {
         type: '',
         token: '',
         cart: [],
+        wishlist: [],
       );
       http.Response res = await http.post(
         Uri.parse('$uri/api/signup'),
@@ -45,6 +51,11 @@ class AuthService {
             showSnackBar(
               context,
               'Đăng ký thành công!!!',
+            );
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AuthScreen.routeName,
+              (route) => false,
             );
           });
     } catch (e) {
@@ -75,8 +86,9 @@ class AuthService {
         context: context,
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          // ignore: use_build_context_synchronously
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
+          await saveTokenToStorage(jsonDecode(res.body)['token']);
+          await saveTypeToStorage(jsonDecode(res.body)['type']);
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -90,7 +102,26 @@ class AuthService {
     }
   }
 
-  // get user data
+  Future<void> saveTokenToStorage(String token) async {
+    final storage = FlutterSecureStorage();
+    await storage.write(key: 'x-auth-token', value: token);
+  }
+
+  Future<void> saveTypeToStorage(String type) async {
+    final storage = FlutterSecureStorage();
+    await storage.write(key: 'type', value: type);
+  }
+
+  Future<void> removeTokenFromStorage() async {
+    final storage = FlutterSecureStorage();
+    await storage.delete(key: 'x-auth-token');
+  }
+
+  Future<void> removeTypeFromStorage() async {
+    final storage = FlutterSecureStorage();
+    await storage.delete(key: 'type');
+  }
+
   void getUserData(
     BuildContext context,
   ) async {
@@ -121,6 +152,7 @@ class AuthService {
           },
         );
 
+        // ignore: use_build_context_synchronously
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(userRes.body);
       }
@@ -133,7 +165,9 @@ class AuthService {
     try {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
-      await sharedPreferences.setString('x-auth-token', '');
+      await removeTokenFromStorage();
+      await removeTypeFromStorage();
+      await sharedPreferences.remove('x-auth-token');
       Navigator.pushNamedAndRemoveUntil(
         context,
         AuthScreen.routeName,

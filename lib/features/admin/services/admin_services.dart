@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_proh/constants/error_handling.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/constants/ultils.dart';
+import 'package:shop_proh/models/category.dart';
 import 'package:shop_proh/models/order.dart';
 import 'package:shop_proh/providers/user_provider.dart';
 import 'package:shop_proh/models/product.dart';
@@ -19,7 +20,7 @@ class AdminServices {
     required String description,
     required double price,
     required double quantity,
-    required String category,
+    required String categoryId,
     required List<File> images,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -40,7 +41,7 @@ class AdminServices {
         description: description,
         quantity: quantity,
         images: imageUrls,
-        category: category,
+        categoryId: categoryId,
         price: price,
       );
 
@@ -57,13 +58,169 @@ class AdminServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Product Added Successfully!');
+          showSnackBar(context, 'Thêm sản phẩm thành công!');
           Navigator.pop(context);
         },
       );
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  void sellCategory({
+    required BuildContext context,
+    required String name,
+    final String? description,
+    required File imageCover,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      final cloudinary = CloudinaryPublic('dvcwwbrqw', 'k4zpogr3');
+      CloudinaryResponse res = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(imageCover.path, folder: name),
+      );
+      Category category = Category(
+        name: name,
+        description: description,
+        imageCover: res.secureUrl,
+      );
+
+      http.Response resHttp = await http.post(
+        Uri.parse('$uri/admin/add-category'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: category.toJson(),
+      );
+
+      httpErrorHandle(
+        response: resHttp,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Thêm danh mục thành công!');
+          Navigator.pop(context);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void updateCategory({
+    required BuildContext context,
+    required Category category,
+    final String? name,
+    final String? description,
+    final File? imageCover,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      if (imageCover != null) {
+        final cloudinary = CloudinaryPublic('dvcwwbrqw', 'k4zpogr3');
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(imageCover.path, folder: name),
+        );
+        http.Response resHttp = await http.put(
+          Uri.parse('$uri/admin/update-category/${category.id}'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          },
+          body: jsonEncode({
+            'name': name ?? category.name,
+            'description': description ?? category.description,
+            'imageCover': res.secureUrl,
+          }),
+        );
+
+        httpErrorHandle(
+          response: resHttp,
+          context: context,
+          onSuccess: () {
+            showSnackBar(context, 'Cập nhật danh mục thành công!');
+            Navigator.pop(context);
+          },
+        );
+      } else {
+        http.Response resHttp = await http.put(
+          Uri.parse('$uri/admin/update-category/${category.id}'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          },
+          body: jsonEncode({
+            'name': name ?? category.name,
+            'description': description ?? category.description,
+          }),
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void deleteCategory({
+    required BuildContext context,
+    required Category category,
+    required VoidCallback onSuccess,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.delete(
+        Uri.parse('$uri/admin/delete-category/${category.id}'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          onSuccess();
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  // fetch all the categories
+  Future<List<Category>> fetchAllCategories(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<Category> categoryList = [];
+    try {
+      http.Response res =
+          await http.get(Uri.parse('$uri/admin/get-categories'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': userProvider.user.token,
+      });
+
+      // ignore: use_build_context_synchronously
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            categoryList.add(
+              Category.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return categoryList;
   }
 
   // get all the products
@@ -106,15 +263,12 @@ class AdminServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      http.Response res = await http.post(
-        Uri.parse('$uri/admin/delete-product'),
+      http.Response res = await http.delete(
+        Uri.parse('$uri/admin/delete-product/${product.id}'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
         },
-        body: jsonEncode({
-          'id': product.id,
-        }),
       );
 
       httpErrorHandle(

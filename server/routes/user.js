@@ -1,7 +1,6 @@
 const express = require("express");
 const userRouter = express.Router();
 const auth = require("../middlewares/auth");
-// const Order = require("../models/order");
 const { Product } = require("../models/product");
 const User = require("../models/user");
 const Order = require("../models/order");
@@ -129,4 +128,36 @@ userRouter.get("/api/cart", auth, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
+// add to wishlist
+userRouter.post("/api/add-to-wishlist", auth, async (req, res) => {
+  try {
+    const { id } = req.body;
+    const product = await Product.findById(id);
+    let user = await User.findById(req.user);
+
+    if (user.wishList.length == 0) {
+      user.wishList.push({ product});
+    } else {
+      let isProductFound = false;
+      for (let i = 0; i < user.wishList.length; i++) {
+        if (user.wishList[i].product._id.equals(product._id)) {
+          isProductFound = true;
+        }
+      }
+
+      if (isProductFound) {
+        let producttt = user.wishList.find((productt) =>
+          productt.product._id.equals(product._id)
+        );
+        producttt.quantity += 1;
+      } else {
+        user.wishList.push({ product});
+      }
+    }
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = userRouter;

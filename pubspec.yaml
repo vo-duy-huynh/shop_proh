@@ -42,10 +42,11 @@ dependencies:
   badges: ^2.0.3
   carousel_slider: ^4.1.1
   dotted_border: ^2.0.0+2
-  cloudinary_public: ^0.20.0
+  cloudinary_public: ^0.23.1
   flutter_rating_bar: ^4.0.1
   intl: ^0.18.0
   pay: ^1.1.0
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
