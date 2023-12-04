@@ -1,45 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:shop_proh/features/auth/screens/register_screen.dart';
+import 'package:shop_proh/features/auth/screens/auth_screen.dart';
 import 'package:shop_proh/features/auth/services/auth_service.dart';
 import 'package:shop_proh/features/auth/widgets/gradient_button.dart';
 import 'package:shop_proh/features/auth/widgets/login_field.dart';
-import 'package:shop_proh/features/auth/widgets/social_button.dart';
 import 'package:shop_proh/features/cart/widgets/palete.dart';
 
-enum Auth {
-  signin,
-  signup,
-}
-
-class AuthScreen extends StatefulWidget {
-  static const String routeName = '/auth-screen';
-  const AuthScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  static const String routeName = '/register-screen';
+  const RegisterScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final AuthService authService = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _nameController.dispose();
   }
 
-  void navigateToRegister() {
-    Navigator.of(context).pushNamed(RegisterScreen.routeName);
+  void navigateToLogin() {
+    Navigator.of(context).pushNamed(AuthScreen.routeName);
   }
 
-  void signIn() {
-    authService.signIn(
+  void signUp() {
+    authService.signUp(
       context: context,
       email: _emailController.text,
       password: _passwordController.text,
+      name: _nameController.text,
     );
   }
 
@@ -53,7 +50,7 @@ class _AuthScreenState extends State<AuthScreen> {
             children: [
               Image.asset('assets/images/signin_balls.png'),
               const Text(
-                'Đăng nhập',
+                'Đăng Ký',
                 style: TextStyle(
                   color: Pallete.gradient1,
                   fontWeight: FontWeight.bold,
@@ -61,39 +58,23 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const SizedBox(height: 40),
-              const SocialButton(
-                  iconPath: 'assets/svgs/g_logo.svg',
-                  label: 'Đăng nhập với Google',
-                  horizontalPadding: 88),
-              const SizedBox(height: 20),
-              const SocialButton(
-                iconPath: 'assets/svgs/f_logo.svg',
-                label: 'Đăng nhập với Facebook',
-                horizontalPadding: 80,
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                'or',
-                style: TextStyle(
-                  fontSize: 17,
-                ),
-              ),
+              LoginField(
+                  hintText: 'Tên người dùng', controller: _nameController),
               const SizedBox(height: 15),
               LoginField(hintText: 'Email', controller: _emailController),
               const SizedBox(height: 15),
-              LoginField(
-                hintText: 'Mật khẩu',
-                controller: _passwordController,
-                isPassword: true,
-              ),
+              LoginField(hintText: 'Mật khẩu', controller: _passwordController),
               const SizedBox(height: 20),
-              GradientButton(text: 'Đăng nhập', onPressed: signIn),
+              GradientButton(
+                text: 'Đăng ký',
+                onPressed: signUp,
+              ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Bạn chưa có tài khoản?',
+                    'Bạn đã có tài khoản?',
                     style: TextStyle(
                       color: Pallete.whiteColor,
                       fontSize: 17,
@@ -101,10 +82,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      navigateToRegister();
+                      Navigator.of(context).pushNamed(AuthScreen.routeName);
                     },
                     child: const Text(
-                      'Đăng ký',
+                      'Đăng nhập',
                       style: TextStyle(
                         color: Pallete.gradient1,
                         fontSize: 17,

@@ -1,14 +1,12 @@
 // import 'dart:js';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_proh/common/widgets/bottom_bar.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
-import 'package:shop_proh/features/admin/screens/admin_screen.dart';
+import 'package:shop_proh/features/admin/screens/dash_board_admin_screen.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
 import 'package:shop_proh/features/auth/services/auth_service.dart';
-import 'package:shop_proh/home/screens/home_screen.dart';
 import 'package:shop_proh/providers/user_provider.dart';
 import 'package:shop_proh/route.dart';
 
@@ -38,9 +36,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Amazon Clone',
+      title: 'Shop Proh',
       theme: ThemeData(
         scaffoldBackgroundColor: GlobalVariables.backgroundColor,
         colorScheme: const ColorScheme.light(
@@ -55,10 +55,11 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true, // can remove this line
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: Provider.of<UserProvider>(context).user.token.isNotEmpty
-          ? Provider.of<UserProvider>(context).user.type == 'user'
+      // Kiểm tra nếu đã có token người dùng
+      home: userProvider.user.token.isNotEmpty
+          ? userProvider.user.type == 'user'
               ? const BottomBar()
-              : const AdminScreen()
+              : const DashBoardAdminScreen()
           : const AuthScreen(),
     );
   }

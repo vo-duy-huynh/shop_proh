@@ -28,14 +28,14 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   void deleteProduct(Product product, int index) {
-    // adminServices.deleteProduct(
-    //   context: context,
-    //   product: product,
-    //   onSuccess: () {
-    //     products!.removeAt(index);
-    //     setState(() {});
-    //   },
-    // );
+    adminServices.deleteProduct(
+      context: context,
+      product: product,
+      onSuccess: () {
+        products!.removeAt(index);
+        setState(() {});
+      },
+    );
   }
 
   void navigateToAddProduct() {
@@ -86,10 +86,8 @@ class _PostsScreenState extends State<PostsScreen> {
             floatingActionButton: FloatingActionButton(
               child: const Icon(Icons.add),
               onPressed: navigateToAddProduct,
-              tooltip: 'Add a Product',
+              tooltip: 'Thêm sản phẩm',
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
           );
   }
 }

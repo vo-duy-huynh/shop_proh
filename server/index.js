@@ -9,6 +9,7 @@ const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 const productRouter = require('./routes/product');
 const userRouter = require('./routes/user');
+const categoryRouter = require('./routes/category');
 const app = express();
 
 app.use(express.json())
@@ -17,6 +18,7 @@ app.use(authRouter);
 app.use(adminRouter);
 app.use(productRouter);
 app.use(userRouter);
+app.use(categoryRouter);
 DB_URI = process.env.MONGOOSE_URI;
 mongoose.connect(`${DB_URI}`).then(() => {
     console.log('Connected to MongoDB');

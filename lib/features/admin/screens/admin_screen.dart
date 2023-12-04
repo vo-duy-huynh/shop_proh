@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
+import 'package:shop_proh/features/admin/screens/dash_board_admin_screen.dart';
 import 'package:shop_proh/features/admin/screens/orders_screen.dart';
 import 'package:shop_proh/features/admin/screens/posts_screen.dart';
 
@@ -16,6 +17,7 @@ class _AdminScreenState extends State<AdminScreen> {
   double bottomBarBorderWidth = 5;
 
   List<Widget> pages = [
+    const DashBoardAdminScreen(),
     const PostsScreen(),
     const Center(
       child: Text('Account Page'),
@@ -112,7 +114,6 @@ class _AdminScreenState extends State<AdminScreen> {
             ),
             label: '',
           ),
-          //ORDERS
           BottomNavigationBarItem(
             icon: Container(
               width: bottomBarWidth,
@@ -120,6 +121,25 @@ class _AdminScreenState extends State<AdminScreen> {
                 border: Border(
                   top: BorderSide(
                     color: _page == 2
+                        ? GlobalVariables.selectedNavBarColor
+                        : GlobalVariables.backgroundColor,
+                    width: bottomBarBorderWidth,
+                  ),
+                ),
+              ),
+              child: const Icon(
+                Icons.all_inbox_outlined,
+              ),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Container(
+              width: bottomBarWidth,
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: _page == 3
                         ? GlobalVariables.selectedNavBarColor
                         : GlobalVariables.backgroundColor,
                     width: bottomBarBorderWidth,

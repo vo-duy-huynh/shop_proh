@@ -8,6 +8,7 @@ import 'package:shop_proh/common/widgets/custom_textfield.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/constants/ultils.dart';
 import 'package:shop_proh/features/admin/services/admin_services.dart';
+import 'package:shop_proh/models/category.dart';
 
 class AddProductScreen extends StatefulWidget {
   static const String routeName = '/add-product';
@@ -23,7 +24,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final AdminServices adminServices = AdminServices();
-  String category = 'Mobiles';
+  Category? selectedCategory;
   final _addProductFormKey = GlobalKey<FormState>();
   List<File> images = [];
   @override
@@ -35,26 +36,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
     quantityController.dispose();
   }
 
-  List<String> productCategories = [
-    'Mobiles',
-    'Essentials',
-    'Appliances',
-    'Books',
-    'Fashion'
-  ];
-
   void sellProduct() {
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
-      adminServices.sellProduct(
-        context: context,
-        name: productNameController.text,
-        description: descriptonController.text,
-        price: double.parse(priceController.text),
-        quantity: double.parse(quantityController.text),
-        category: category,
-        images: images,
-      );
+      // Assuming you have a selectedCategory variable to store the selected category
+      Category? selectedCategory;
+
+      // Search for the selected category in the list
+      for (Category category in listCategory) {
+        if (category.name == listCategory[0].name) {
+          selectedCategory = category;
+          break;
+        }
+      }
+
+      if (selectedCategory != null) {
+        adminServices.sellProduct(
+          context: context,
+          name: productNameController.text,
+          description: descriptonController.text,
+          price: double.parse(priceController.text),
+          quantity: double.parse(quantityController.text),
+          images: images,
+          categoryId: selectedCategory.id!, // Use the category ID
+        );
+      }
     }
+  }
+
+  List<Category> listCategory = [];
+  void fetchAllCategories() async {
+    listCategory = await adminServices.fetchAllCategories(context);
+    setState(() {});
   }
 
   void selectImages() async {
@@ -165,18 +177,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  child: DropdownButton(
-                    value: category,
+                  child: DropdownButton<Category>(
+                    value: selectedCategory,
                     icon: const Icon(Icons.keyboard_arrow_down),
-                    items: productCategories.map((String item) {
-                      return DropdownMenuItem(
+                    items: listCategory.map((Category item) {
+                      return DropdownMenuItem<Category>(
                         value: item,
-                        child: Text(item),
+                        child: Text(item.name),
                       );
                     }).toList(),
-                    onChanged: (String? newVal) {
+                    onChanged: (Category? newVal) {
                       setState(() {
-                        category = newVal!;
+                        selectedCategory = newVal!;
                       });
                     },
                   ),
@@ -185,6 +197,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 CustomButton(
                   text: 'Thêm Sản Phẩm',
                   onTap: sellProduct,
+                  color: GlobalVariables.appBarGradient.colors[0],
                 ),
                 const SizedBox(height: 20),
               ],
