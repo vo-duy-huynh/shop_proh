@@ -23,26 +23,43 @@ class AccountScreen extends StatelessWidget {
             children: [
               Container(
                 alignment: Alignment.topLeft,
-                child: Image.asset(
-                  'assets/images/amazon_in.png',
-                  width: 120,
-                  height: 45,
-                  color: Colors.black,
+                child: Container(
+                  // decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(10),
+                  //   boxShadow: [
+                  //     BoxShadow(
+                  //       color: Colors.blue.shade400,
+                  //       blurRadius: 5,
+                  //       offset: const Offset(0, 3),
+                  //     ),
+                  //   ],
+                  // ),
+                  child: Text(
+                    'SHOP PROH',
+                    style: TextStyle(
+                      // #EA2184
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
               ),
               Container(
                 padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Row(children: const [
-                  Padding(
-                    padding: EdgeInsets.only(right: 5),
-                    child: Icon(
-                      Icons.notifications_outlined,
+                child: Row(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.only(right: 5),
+                      child: Icon(
+                        Icons.notifications_outlined,
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.search,
-                  ),
-                ]),
+                    Icon(
+                      Icons.search,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -1,50 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shop_proh/common/widgets/loader.dart';
 import 'package:shop_proh/features/product_details/screens/product_details_screen.dart';
-import 'package:shop_proh/features/product_details/services/product_details_services.dart';
 import 'package:shop_proh/home/screens/all_products_screen.dart';
 import 'package:shop_proh/home/services/home_services.dart';
 import 'package:shop_proh/models/product.dart';
-import 'package:shop_proh/providers/user_provider.dart';
 
-class DealOfDay extends StatefulWidget {
+class DealOfDayTest extends StatefulWidget {
   // lấy category id
   final Product? product;
-  const DealOfDay({Key? key, required this.product}) : super(key: key);
+  const DealOfDayTest({Key? key, required this.product}) : super(key: key);
 
   @override
-  State<DealOfDay> createState() => _DealOfDayState();
+  State<DealOfDayTest> createState() => _DealOfDayState();
 }
 
-class _DealOfDayState extends State<DealOfDay> {
+class _DealOfDayState extends State<DealOfDayTest> {
   Product? product;
   List<Product> productList = [];
   final HomeServices homeServices = HomeServices();
-  final ProductDetailsServices productDetailsServices =
-      ProductDetailsServices();
   final numberFormat = NumberFormat("#,##0", "en_US");
   String categoryId = '';
   @override
   void initState() {
     super.initState();
+    // fetchDealOfDay();
     product = widget.product;
   }
 
-  void addToCart() {
-    productDetailsServices.addToCart(
-      context: context,
-      product: widget.product!,
-    );
-  }
-
-  void addToWishlist() {
-    productDetailsServices.addToWishlist(
-      context: context,
-      product: widget.product!,
-    );
-  }
+  // void fetchDealOfDay() async {
+  //   product = await homeServices.fetchDealOfDay(context: context);
+  //   setState(() {});
+  // }
+  // void fetchByCategory() async {
+  //   productList = await homeServices.fetchByCategory(categoryId: categoryId, context: context);
+  //   setState(() {});
+  // }
 
   void navigateToDetailScreen() {
     Navigator.pushNamed(
@@ -60,7 +51,6 @@ class _DealOfDayState extends State<DealOfDay> {
 
   @override
   Widget build(BuildContext context) {
-    final userWishlist = Provider.of<UserProvider>(context).user.wishlist;
     return product == null
         ? const Loader()
         : product!.name.isEmpty
@@ -90,20 +80,13 @@ class _DealOfDayState extends State<DealOfDay> {
                                 child: Container(
                                   padding: EdgeInsets.all(5),
                                   decoration: BoxDecoration(
-                                    color: userWishlist.any((item) =>
-                                            item['product']['_id'] ==
-                                            product!.id)
-                                        ? Colors.red
-                                        : Colors.grey,
+                                    color: Colors.red,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: GestureDetector(
-                                    onTap: addToWishlist,
-                                    child: const Icon(
-                                      Icons.favorite,
-                                      color: Colors.white,
-                                      size: 15,
-                                    ),
+                                  child: const Icon(
+                                    Icons.favorite,
+                                    color: Colors.white,
+                                    size: 15,
                                   ),
                                 ),
                               ),
@@ -162,9 +145,7 @@ class _DealOfDayState extends State<DealOfDay> {
                                     ],
                                   ),
                                   child: IconButton(
-                                    onPressed: () {
-                                      addToCart();
-                                    },
+                                    onPressed: () {},
                                     icon: const Icon(
                                       Icons.shopping_cart,
                                       color: Colors.white,

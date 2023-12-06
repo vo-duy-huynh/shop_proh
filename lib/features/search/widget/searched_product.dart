@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shop_proh/common/widgets/start.dart';
 import 'package:shop_proh/models/product.dart';
 
@@ -11,6 +12,7 @@ class SearchedProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final numberFomat = NumberFormat("#,##0", "en_US");
     double totalRating = 0;
     for (int i = 0; i < product.rating!.length; i++) {
       totalRating += product.rating![i].rating;
@@ -57,32 +59,11 @@ class SearchedProduct extends StatelessWidget {
                     width: 235,
                     padding: const EdgeInsets.only(left: 10, top: 5),
                     child: Text(
-                      '\$${product.price}',
+                      '${numberFomat.format(product.price)} đ',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                    ),
-                  ),
-                  Container(
-                    width: 235,
-                    padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: Text(
-                      product.description,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                      maxLines: 2,
-                    ),
-                  ),
-                  Container(
-                    width: 235,
-                    padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: const Text(
-                      'In Stock',
-                      style: TextStyle(
-                        color: Colors.teal,
+                        color: Colors.red,
                       ),
                       maxLines: 2,
                     ),

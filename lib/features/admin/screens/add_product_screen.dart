@@ -24,7 +24,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final AdminServices adminServices = AdminServices();
-  Category? selectedCategory;
+  String? selectedValue;
   final _addProductFormKey = GlobalKey<FormState>();
   List<File> images = [];
   @override
@@ -36,20 +36,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
     quantityController.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    fetchAllCategories();
+  }
+
   void sellProduct() {
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
-      // Assuming you have a selectedCategory variable to store the selected category
-      Category? selectedCategory;
-
-      // Search for the selected category in the list
-      for (Category category in listCategory) {
-        if (category.name == listCategory[0].name) {
-          selectedCategory = category;
-          break;
-        }
-      }
-
-      if (selectedCategory != null) {
+      if (selectedValue != null) {
         adminServices.sellProduct(
           context: context,
           name: productNameController.text,
@@ -57,7 +52,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           price: double.parse(priceController.text),
           quantity: double.parse(quantityController.text),
           images: images,
-          categoryId: selectedCategory.id!, // Use the category ID
+          categoryId: selectedValue!,
         );
       }
     }
@@ -177,18 +172,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  child: DropdownButton<Category>(
-                    value: selectedCategory,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items: listCategory.map((Category item) {
-                      return DropdownMenuItem<Category>(
-                        value: item,
-                        child: Text(item.name),
-                      );
-                    }).toList(),
-                    onChanged: (Category? newVal) {
+                  child: DropdownButton(
+                    hint: const Text('Chọn Danh Mục'),
+                    value: selectedValue,
+                    items: listCategory
+                        .map((e) => DropdownMenuItem(
+                              child: Text(e.name),
+                              value: e.id,
+                            ))
+                        .toList(),
+                    onChanged: (value) {
                       setState(() {
-                        selectedCategory = newVal!;
+                        selectedValue = value as String?;
                       });
                     },
                   ),

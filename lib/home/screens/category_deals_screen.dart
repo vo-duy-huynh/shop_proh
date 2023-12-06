@@ -19,18 +19,28 @@ class CategoryDealsScreen extends StatefulWidget {
 
 class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
   List<Product>? productList;
+  String name = '';
   final HomeServices homeServices = HomeServices();
 
   @override
   void initState() {
     super.initState();
     fetchCategoryProducts();
+    getNameByCategoryId();
+  }
+
+  getNameByCategoryId() async {
+    name = await homeServices.getNameByCategoryId(
+      context: context,
+      categoryId: widget.category,
+    );
+    setState(() {});
   }
 
   fetchCategoryProducts() async {
-    productList = await homeServices.fetchCategoryProducts(
+    productList = await homeServices.fetchByCategory(
       context: context,
-      category: widget.category,
+      categoryId: widget.category,
     );
     setState(() {});
   }
@@ -47,7 +57,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
             ),
           ),
           title: Text(
-            widget.category,
+            name,
             style: const TextStyle(
               color: Colors.black,
             ),
@@ -63,7 +73,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   alignment: Alignment.topLeft,
                   child: Text(
-                    'Chào mừng bạn đến với ${widget.category}',
+                    'Chào mừng bạn đến với ${name}',
                     style: const TextStyle(
                       fontSize: 20,
                     ),

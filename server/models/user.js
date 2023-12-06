@@ -45,7 +45,7 @@ const userSchema = mongoose.Schema({
     {
       product: productSchema,
     },
-  ],
+  ]
 });
 
 const User = mongoose.model("User", userSchema);

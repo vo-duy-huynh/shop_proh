@@ -2,6 +2,7 @@ const express = require("express");
 const productRouter = express.Router();
 const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
+const Category = require("../models/category");
 
 productRouter.get("/api/products/", auth, async (req, res) => {
   try {
@@ -15,17 +16,21 @@ productRouter.get("/api/products/", auth, async (req, res) => {
 productRouter.get("/api/products/search/:name", auth, async (req, res) => {
     try {
       const searchTerm = req.params.name;
-      
       const products = await Product.find({
         $or: [
           { name: { $regex: searchTerm, $options: "i" } },
-          { category: { $regex: searchTerm, $options: "i" } },
-          { name: { $regex: `\\b${searchTerm}`, $options: "i" } }, // Tìm kiếm theo từ con trong tên
-          { category: { $regex: `\\b${searchTerm}`, $options: "i" } }, // Tìm kiếm theo từ con trong danh mục
         ],
       });
-  
-      res.json(products);
+      let category = await Category.findOne({
+        name: { $regex: searchTerm, $options: "i" },
+      });
+      if (category) {
+        const productList = await Product.find({ category: category._id });
+        res.json(productList);
+      }
+      else {
+        res.json(products);
+      }
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
@@ -87,4 +92,19 @@ productRouter.get("/api/all-products", auth, async (req, res) => {
   }
 });
 
+// fetch product by category
+productRouter.get("/api/products/:category", async (req, res) => {
+  try {
+    // nếu không có category thì lấy tất cả sản phẩm
+    if (req.params.category === 'All') {
+      const products = await Product.find({});
+      return res.json(products);
+    }
+    const products = await Product.find({ category: req.params.category });
+    res.json(products);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+}
+);
 module.exports = productRouter;

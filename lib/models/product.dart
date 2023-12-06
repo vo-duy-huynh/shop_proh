@@ -7,7 +7,7 @@ class Product {
   final String description;
   final double quantity;
   final List<String> images;
-  final String categoryId;
+  final String category;
   final double price;
   final String? id;
   final List<Rating>? rating;
@@ -16,7 +16,7 @@ class Product {
     required this.description,
     required this.quantity,
     required this.images,
-    required this.categoryId,
+    required this.category,
     required this.price,
     this.id,
     this.rating,
@@ -28,7 +28,7 @@ class Product {
       'description': description,
       'quantity': quantity,
       'images': images,
-      'categoryId': categoryId,
+      'category': category,
       'price': price,
       'id': id,
       'rating': rating,
@@ -41,7 +41,7 @@ class Product {
       description: map['description'] ?? '',
       quantity: map['quantity']?.toDouble() ?? 0.0,
       images: List<String>.from(map['images']),
-      categoryId: map['categoryId'] ?? '',
+      category: map['category'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
       id: map['_id'],
       rating: map['ratings'] != null

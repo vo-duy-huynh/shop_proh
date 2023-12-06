@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:shop_proh/features/account/screens/account_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_proh/features/account/widgets/account_button.dart';
 import 'package:shop_proh/features/auth/services/auth_service.dart';
+import 'package:shop_proh/providers/theme_provider.dart';
 
-class TopButtons extends StatelessWidget {
-  const TopButtons({Key? key}) : super(key: key);
+class TopButtons extends StatefulWidget {
+  const TopButtons({super.key});
 
+  @override
+  State<TopButtons> createState() => _TopButtonsState();
+}
+
+class _TopButtonsState extends State<TopButtons> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -17,7 +23,7 @@ class TopButtons extends StatelessWidget {
               onTap: () {},
             ),
             AccountButton(
-              text: 'Địa Chỉ',
+              text: 'Cập Nhật Thông Tin',
               onTap: () {},
             ),
           ],
@@ -26,14 +32,19 @@ class TopButtons extends StatelessWidget {
         Row(
           children: [
             AccountButton(
+              text: Provider.of<ThemeProvider>(context).isDark
+                  ? 'Chế Độ Sáng'
+                  : 'Chế Độ Tối',
+              onTap: () {
+                Provider.of<ThemeProvider>(context, listen: false)
+                    .toggleTheme();
+              },
+            ),
+            AccountButton(
               text: 'Đăng Xuất',
               onTap: () {
                 AuthService().logOut(context);
               },
-            ),
-            AccountButton(
-              text: 'Yêu Thích',
-              onTap: () {},
             ),
           ],
         ),
