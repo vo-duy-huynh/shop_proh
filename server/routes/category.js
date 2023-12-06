@@ -2,6 +2,7 @@ const express = require("express");
 const categoryRouter = express.Router();
 const admin = require("../middlewares/admin");
 const Category = require("../models/category");
+const auth = require("../middlewares/auth");
 
 categoryRouter.post("/admin/add-category", admin, async (req, res) => {
   try {
@@ -21,7 +22,7 @@ categoryRouter.post("/admin/add-category", admin, async (req, res) => {
   }
 });
 
-categoryRouter.get("/admin/get-categories", admin, async (req, res) => {
+categoryRouter.get("/admin/get-categories", auth, async (req, res) => {
   try {
     const categories = await Category.find({});
     if (!categories) {
@@ -65,4 +66,29 @@ categoryRouter.put("/admin/update-category/:id", admin, async (req, res) => {
         res.status(500).json({ error: e.message });
     }     
 });
+categoryRouter.get("/api/get-top-categories", async (req, res) => {
+  try {
+    const categories = await Category.find({});
+    if (!categories) {
+      return res.status(400).json({ msg: "Không có danh mục nào!" });
+    }
+    res.json(categories.slice(0, 6));
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+categoryRouter.get("/api/get-categoryname/:categoryid", async (req, res) => {
+  try {
+    const { categoryid } = req.params;
+    const category = await Category.findById(categoryid);
+    if (!category) {
+      return res.status(400).json({ msg: "Không có danh mục nào!" });
+    }
+    res.json(category.name);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+}
+);
 module.exports = categoryRouter;

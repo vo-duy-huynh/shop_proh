@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shop_proh/common/widgets/loader.dart';
 import 'package:shop_proh/features/account/widgets/single_product.dart';
 import 'package:shop_proh/features/admin/screens/add_product_screen.dart';
+import 'package:shop_proh/features/admin/screens/update_product_screen.dart';
 import 'package:shop_proh/features/admin/services/admin_services.dart';
+import 'package:shop_proh/features/product_details/screens/product_details_screen.dart';
 import 'package:shop_proh/models/product.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -32,8 +34,9 @@ class _PostsScreenState extends State<PostsScreen> {
       context: context,
       product: product,
       onSuccess: () {
-        products!.removeAt(index);
-        setState(() {});
+        setState(() {
+          products!.removeAt(index);
+        });
       },
     );
   }
@@ -42,52 +45,88 @@ class _PostsScreenState extends State<PostsScreen> {
     Navigator.pushNamed(context, AddProductScreen.routeName);
   }
 
+  void navigateToProductDetail(Product product) {
+    Navigator.pushNamed(
+      context,
+      ProductDetailScreen.routeName,
+      arguments: product,
+    );
+  }
+
+  void navigateToUpdateProduct(Product product) {
+    Navigator.pushNamed(
+      context,
+      UpdateProductScreen.routeName,
+      arguments: product,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return products == null
-        ? const Loader()
-        : Scaffold(
-            body: GridView.builder(
-              itemCount: products!.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
-              itemBuilder: (context, index) {
-                final productData = products![index];
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 140,
-                      child: SingleProduct(
-                        image: productData.images[0],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Danh sách sản phẩm'),
+      ),
+      body: products == null
+          ? const Loader()
+          : ListView(
+              children: [
+                GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: products!.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                  ),
+                  itemBuilder: (context, index) {
+                    final productData = products![index];
+                    return Card(
+                      elevation: 3.0,
+                      child: InkWell(
+                        onTap: () {
+                          navigateToProductDetail(productData);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 140,
+                              child: SingleProduct(
+                                image: productData.images[0],
+                                onEdit: () {
+                                  navigateToUpdateProduct(productData);
+                                },
+                                onDelete: () {
+                                  deleteProduct(productData, index);
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                productData.name!,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            productData.name,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => deleteProduct(productData, index),
-                          icon: const Icon(
-                            Icons.delete_outline,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
+                    );
+                  },
+                ),
+              ],
             ),
-            floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.add),
-              onPressed: navigateToAddProduct,
-              tooltip: 'Thêm sản phẩm',
-            ),
-          );
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: navigateToAddProduct,
+        tooltip: 'Thêm sản phẩm',
+      ),
+    );
   }
 }

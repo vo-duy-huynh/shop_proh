@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_proh/common/widgets/custom_textfield.dart';
 import 'package:shop_proh/constants/ultils.dart';
@@ -25,6 +23,7 @@ class _UpdateCategoryScreenState extends State<UpdateCategoryScreen> {
   final AdminServices adminServices = AdminServices();
   File? updatedImage;
   bool useOldImage = true;
+  String? oldImage;
 
   @override
   void initState() {

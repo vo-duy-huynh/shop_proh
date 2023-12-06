@@ -1,11 +1,12 @@
-import 'package:badges/badges.dart' as badges;
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_proh/features/account/screens/account_screen.dart';
-import 'package:shop_proh/features/cart/screens/cart_screen.dart';
+import 'package:shop_proh/features/cart/screens/cart_screen_test.dart';
+import 'package:shop_proh/features/cart/screens/wish_list_screen.dart';
 import 'package:shop_proh/home/screens/home_screen.dart';
 import 'package:shop_proh/providers/user_provider.dart';
+import 'package:badges/badges.dart' as badge;
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -16,14 +17,23 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
+  bool _showSearchOverlay = false;
+
+  void toggleSearchOverlay() {
+    setState(() {
+      _showSearchOverlay = !_showSearchOverlay;
+    });
+  }
+
   int _page = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
 
   List<Widget> pages = [
     const HomeScreen(),
+    const CartScreenTest(),
+    const WishListScreen(),
     const AccountScreen(),
-    const CartScreen(),
   ];
 
   void updatePage(int index) {
@@ -35,82 +45,55 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     final userCartLen = context.watch<UserProvider>().user.cart.length;
+    final userWishlistLen = context.watch<UserProvider>().user.wishlist.length;
     return Scaffold(
       body: pages[_page],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        iconSize: 30,
+        selectedItemColor: const Color(0xFFFD725A),
+        unselectedItemColor: Colors.grey,
         currentIndex: _page,
-        selectedItemColor: GlobalVariables.selectedNavBarColor,
-        unselectedItemColor: GlobalVariables.unselectedNavBarColor,
-        backgroundColor: GlobalVariables.backgroundColor,
-        iconSize: 28,
         onTap: updatePage,
+        type: BottomNavigationBarType.fixed,
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: ''),
           BottomNavigationBarItem(
-            icon: Container(
-              width: bottomBarWidth,
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: _page == 0
-                        ? GlobalVariables.selectedNavBarColor
-                        : GlobalVariables.backgroundColor,
-                    width: bottomBarBorderWidth,
-                  ),
-                ),
+            icon: badge.Badge(
+              badgeContent: Text(
+                userCartLen.toString(),
+                style: TextStyle(color: Colors.white),
               ),
-              child: const Icon(
-                Icons.home_outlined,
-              ),
+              position: badge.BadgePosition.topEnd(top: -13, end: 0),
+              child: Icon(Icons.shopping_cart_outlined),
             ),
             label: '',
           ),
-          // ACCOUNT
           BottomNavigationBarItem(
-            icon: Container(
-              width: bottomBarWidth,
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: _page == 1
-                        ? GlobalVariables.selectedNavBarColor
-                        : GlobalVariables.backgroundColor,
-                    width: bottomBarBorderWidth,
-                  ),
-                ),
+            icon: badge.Badge(
+              badgeContent: Text(
+                userWishlistLen.toString(),
+                style: TextStyle(color: Colors.white),
               ),
-              child: const Icon(
-                Icons.person_outline_outlined,
-              ),
+              position: badge.BadgePosition.topEnd(top: -13, end: 0),
+              child: Icon(Icons.favorite_border_outlined),
             ),
             label: '',
           ),
-          // CART
           BottomNavigationBarItem(
-            icon: Container(
-              width: bottomBarWidth,
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: _page == 2
-                        ? GlobalVariables.selectedNavBarColor
-                        : GlobalVariables.backgroundColor,
-                    width: bottomBarBorderWidth,
-                  ),
-                ),
-              ),
-              child: badges.Badge(
-                elevation: 0,
-                badgeContent: Text(userCartLen.toString()),
-                badgeColor: Colors.white,
-                child: const Icon(
-                  Icons.shopping_cart_outlined,
-                ),
-              ),
-            ),
-            label: '',
-          ),
+              icon: Icon(Icons.person_2_outlined), label: ''),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          SystemNavigator.pop();
+        },
+        backgroundColor: const Color(0xFFFD725A),
+        shape: const CircleBorder(),
+        child: const Icon(Icons.qr_code_scanner_outlined),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
     );
   }
 }

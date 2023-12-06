@@ -1,26 +1,75 @@
 const express = require("express");
 const adminRouter = express.Router();
 const admin = require("../middlewares/admin");
-const { Product } = require("../models/product");
+const  {Product}  = require("../models/product");
 const Order = require("../models/order");
+const Category = require("../models/category");
 // const Order = require("../models/order");
 // const { PromiseProvider } = require("mongoose");
-
-// Add product
 adminRouter.post("/admin/add-product", admin, async (req, res) => {
   try {
     const { name, description, images, quantity, price, category } = req.body;
+
+    const categoryRes = await Category.findById(category);
+    if (!category) {
+      return res.status(400).json({ msg: "Invalid category ID" });
+    }
     let product = new Product({
       name,
       description,
       images,
       quantity,
       price,
-      category,
+      category: categoryRes._id, // Assign the category ID
     });
+
+    // Save the product to the database
     product = await product.save();
+
     if (!product) {
       return res.status(400).json({ msg: "Thêm sản phẩm thất bại!" });
+    }
+
+    res.json(product);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+adminRouter.put("/admin/update-product/:id", admin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {  name, description, images, quantity, price, category } = req.body;
+
+    const categoryRes = await Category.findById(category);
+    if (!categoryRes) {
+      return res.status(400).json({ msg: "Invalid category ID" });
+    }
+    let product = await Product.findById(id);
+    product.name = name;
+    product.description = description;
+    product.images = images;
+    product.quantity = quantity;
+    product.price = price;
+    product.category = categoryRes._id;
+    product = await product.save();
+    if (!product) {
+      return res.status(400).json({ msg: "Cập nhật sản phẩm thất bại!" });
+    }
+
+    res.json(product);
+  }
+  catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+adminRouter.delete("/admin/delete-product/:id", admin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    if (!product) {
+      return res.status(400).json({ msg: "Xóa sản phẩm thất bại!" });
     }
     res.json(product);
   } catch (e) {

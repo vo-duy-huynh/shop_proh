@@ -4,6 +4,7 @@ import 'package:shop_proh/features/address/screens/address_screen.dart';
 import 'package:shop_proh/features/admin/screens/add_category_screen.dart';
 import 'package:shop_proh/features/admin/screens/add_product_screen.dart';
 import 'package:shop_proh/features/admin/screens/update_category_screen.dart';
+import 'package:shop_proh/features/admin/screens/update_product_screen.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
 import 'package:shop_proh/features/auth/screens/register_screen.dart';
 import 'package:shop_proh/features/cart/services/cart_services.dart';
@@ -93,6 +94,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => UpdateCategoryScreen(
           category: category,
+        ),
+      );
+    case UpdateProductScreen.routeName:
+      var product = routeSettings.arguments as Product;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => UpdateProductScreen(
+          product: product,
         ),
       );
     case OrderDetailScreen.routeName:

@@ -26,7 +26,7 @@ class AdminServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      final cloudinary = CloudinaryPublic('dvcwwbrqw', 'vooob5l4');
+      final cloudinary = CloudinaryPublic('dvcwwbrqw', 'k4zpogr3');
       List<String> imageUrls = [];
 
       for (int i = 0; i < images.length; i++) {
@@ -35,13 +35,12 @@ class AdminServices {
         );
         imageUrls.add(res.secureUrl);
       }
-
       Product product = Product(
         name: name,
         description: description,
         quantity: quantity,
         images: imageUrls,
-        categoryId: categoryId,
+        category: categoryId,
         price: price,
       );
 
@@ -54,6 +53,7 @@ class AdminServices {
         body: product.toJson(),
       );
 
+      // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: res,
         context: context,
@@ -62,6 +62,89 @@ class AdminServices {
           Navigator.pop(context);
         },
       );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  // update product
+  void updateProduct({
+    required BuildContext context,
+    required Product product,
+    final String? name,
+    final String? description,
+    final double? price,
+    final double? quantity,
+    final List<File>? images,
+    final String? categoryId,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      if (images == null) {
+        http.Response resHttp = await http.put(
+          Uri.parse('$uri/admin/update-product/${product.id}'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          },
+          body: jsonEncode({
+            'name': name ?? product.name,
+            'description': description ?? product.description,
+            'price': price ?? product.price,
+            'quantity': quantity ?? product.quantity,
+            'category': categoryId ?? product.category,
+            'images': product.images,
+          }),
+        );
+
+        // ignore: use_build_context_synchronously
+        httpErrorHandle(
+          response: resHttp,
+          context: context,
+          onSuccess: () {
+            showSnackBar(context, 'Cập nhật sản phẩm thành công!');
+            Navigator.pop(context);
+          },
+        );
+      } else {
+        final cloudinary = CloudinaryPublic('dvcwwbrqw', 'k4zpogr3');
+        List<String> imageUrls = [];
+
+        for (int i = 0; i < images.length; i++) {
+          CloudinaryResponse res = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(images[i].path, folder: name),
+          );
+          imageUrls.add(res.secureUrl);
+        }
+
+        http.Response resHttp = await http.put(
+          Uri.parse('$uri/admin/update-product/${product.id}'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          },
+          body: jsonEncode({
+            'name': name ?? product.name,
+            'description': description ?? product.description,
+            'price': price ?? product.price,
+            'quantity': quantity ?? product.quantity,
+            'category': categoryId ?? product.category,
+            'images': imageUrls,
+          }),
+        );
+
+        // ignore: use_build_context_synchronously
+        httpErrorHandle(
+          response: resHttp,
+          context: context,
+          onSuccess: () {
+            showSnackBar(context, 'Cập nhật sản phẩm thành công!');
+            Navigator.pop(context);
+          },
+        );
+      }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
@@ -95,6 +178,7 @@ class AdminServices {
         body: category.toJson(),
       );
 
+      // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: resHttp,
         context: context,
@@ -118,11 +202,35 @@ class AdminServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      if (imageCover != null) {
+      if (imageCover == null) {
+        http.Response resHttp = await http.put(
+          Uri.parse('$uri/admin/update-category/${category.id}'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          },
+          body: jsonEncode({
+            'name': name ?? category.name,
+            'description': description ?? category.description,
+            'imageCover': category.imageCover,
+          }),
+        );
+
+        // ignore: use_build_context_synchronously
+        httpErrorHandle(
+          response: resHttp,
+          context: context,
+          onSuccess: () {
+            showSnackBar(context, 'Cập nhật danh mục thành công!');
+            Navigator.pop(context);
+          },
+        );
+      } else {
         final cloudinary = CloudinaryPublic('dvcwwbrqw', 'k4zpogr3');
         CloudinaryResponse res = await cloudinary.uploadFile(
           CloudinaryFile.fromFile(imageCover.path, folder: name),
         );
+
         http.Response resHttp = await http.put(
           Uri.parse('$uri/admin/update-category/${category.id}'),
           headers: {
@@ -136,6 +244,7 @@ class AdminServices {
           }),
         );
 
+        // ignore: use_build_context_synchronously
         httpErrorHandle(
           response: resHttp,
           context: context,
@@ -143,18 +252,6 @@ class AdminServices {
             showSnackBar(context, 'Cập nhật danh mục thành công!');
             Navigator.pop(context);
           },
-        );
-      } else {
-        http.Response resHttp = await http.put(
-          Uri.parse('$uri/admin/update-category/${category.id}'),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': userProvider.user.token,
-          },
-          body: jsonEncode({
-            'name': name ?? category.name,
-            'description': description ?? category.description,
-          }),
         );
       }
     } catch (e) {

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-String uri = 'http://192.168.61.164:3000';
+String uri = 'http://10.0.2.2:3000';
 
 class GlobalVariables {
   // COLORS
   static const appBarGradient = LinearGradient(
     colors: [
-      Color.fromARGB(255, 29, 201, 192),
-      Color.fromARGB(255, 125, 221, 216),
+      Color.fromRGBO(35, 114, 242, 1),
+      Color.fromRGBO(35, 114, 242, 1),
     ],
     stops: [0.5, 1.0],
   );
@@ -28,6 +28,26 @@ class GlobalVariables {
   ];
 
   static const List<Map<String, String>> categoryImages = [
+    {
+      'title': 'Mobiles',
+      'image': 'assets/images/mobiles.jpeg',
+    },
+    {
+      'title': 'Essentials',
+      'image': 'assets/images/essentials.jpeg',
+    },
+    {
+      'title': 'Appliances',
+      'image': 'assets/images/appliances.jpeg',
+    },
+    {
+      'title': 'Books',
+      'image': 'assets/images/books.jpeg',
+    },
+    {
+      'title': 'Fashion',
+      'image': 'assets/images/fashion.jpeg',
+    },
     {
       'title': 'Mobiles',
       'image': 'assets/images/mobiles.jpeg',
