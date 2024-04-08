@@ -3,7 +3,6 @@ import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/features/search/screens/search_screens.dart';
 import 'package:shop_proh/home/screens/category_deals_screen.dart';
 import 'package:shop_proh/home/services/home_services.dart';
-import 'package:shop_proh/home/widgets/carousel_image.dart';
 import 'package:shop_proh/home/widgets/deal_of_day.dart';
 import 'package:shop_proh/home/widgets/top_categories.dart';
 import 'package:shop_proh/models/category.dart';
@@ -149,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 10),
             const TopCategories(),
             const SizedBox(height: 10),
-            const CarouselImage(),
+            // const CarouselImage(),
             const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,

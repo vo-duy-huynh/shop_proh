@@ -82,6 +82,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
     Product product = widget.product;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: Text('Cập Nhật Sản Phẩm'),
         actions: [
           IconButton(

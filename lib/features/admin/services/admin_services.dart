@@ -45,7 +45,7 @@ class AdminServices {
       );
 
       http.Response res = await http.post(
-        Uri.parse('$uri/admin/add-product'),
+        Uri.parse('$uri/api/v1/admin/admin/add-product'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -84,7 +84,7 @@ class AdminServices {
     try {
       if (images == null) {
         http.Response resHttp = await http.put(
-          Uri.parse('$uri/admin/update-product/${product.id}'),
+          Uri.parse('$uri/api/v1/admin/admin/update-product/${product.id}'),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
@@ -120,7 +120,7 @@ class AdminServices {
         }
 
         http.Response resHttp = await http.put(
-          Uri.parse('$uri/admin/update-product/${product.id}'),
+          Uri.parse('$uri/api/v1/admin/admin/update-product/${product.id}'),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
@@ -170,7 +170,7 @@ class AdminServices {
       );
 
       http.Response resHttp = await http.post(
-        Uri.parse('$uri/admin/add-category'),
+        Uri.parse('$uri/api/v1/category/admin/add-category'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -204,7 +204,8 @@ class AdminServices {
     try {
       if (imageCover == null) {
         http.Response resHttp = await http.put(
-          Uri.parse('$uri/admin/update-category/${category.id}'),
+          Uri.parse(
+              '$uri/api/v1/category/admin/update-category/${category.id}'),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
@@ -232,7 +233,8 @@ class AdminServices {
         );
 
         http.Response resHttp = await http.put(
-          Uri.parse('$uri/admin/update-category/${category.id}'),
+          Uri.parse(
+              '$uri/api/v1/category/admin/update-category/${category.id}'),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
@@ -268,7 +270,7 @@ class AdminServices {
 
     try {
       http.Response res = await http.delete(
-        Uri.parse('$uri/admin/delete-category/${category.id}'),
+        Uri.parse('$uri/api/v1/category/admin/delete-category/${category.id}'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -292,22 +294,23 @@ class AdminServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Category> categoryList = [];
     try {
-      http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-categories'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+          Uri.parse('$uri/api/v1/category/admin/get-categories'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          });
 
       // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             categoryList.add(
               Category.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );
@@ -325,8 +328,8 @@ class AdminServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Product> productList = [];
     try {
-      http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-products'), headers: {
+      http.Response res = await http
+          .get(Uri.parse('$uri/api/v1/admin/admin/get-products'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -335,11 +338,11 @@ class AdminServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             productList.add(
               Product.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );
@@ -361,7 +364,7 @@ class AdminServices {
 
     try {
       http.Response res = await http.delete(
-        Uri.parse('$uri/admin/delete-product/${product.id}'),
+        Uri.parse('$uri/api/v1/admin/admin/delete-product/${product.id}'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -384,8 +387,8 @@ class AdminServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Order> orderList = [];
     try {
-      http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-orders'), headers: {
+      http.Response res = await http
+          .get(Uri.parse('$uri/api/v1/admin/admin/get-orders'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -395,11 +398,11 @@ class AdminServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             orderList.add(
               Order.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );
@@ -422,7 +425,7 @@ class AdminServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/admin/change-order-status'),
+        Uri.parse('$uri/api/v1/admin/admin/change-order-status'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -441,5 +444,20 @@ class AdminServices {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  // fetchUserName
+  Future<String> fetchUserName(String userId) async {
+    String userName = '';
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/api/v1/admin/admin/get-user-name/$userId'),
+      );
+
+      userName = jsonDecode(res.body)['data']['name'];
+    } catch (e) {
+      print(e.toString());
+    }
+    return userName;
   }
 }

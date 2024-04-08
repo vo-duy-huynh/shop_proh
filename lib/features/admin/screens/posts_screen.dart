@@ -4,6 +4,7 @@ import 'package:shop_proh/features/account/widgets/single_product.dart';
 import 'package:shop_proh/features/admin/screens/add_product_screen.dart';
 import 'package:shop_proh/features/admin/screens/update_product_screen.dart';
 import 'package:shop_proh/features/admin/services/admin_services.dart';
+import 'package:shop_proh/features/product_details/screens/product_details_screen%20copy.dart';
 import 'package:shop_proh/features/product_details/screens/product_details_screen.dart';
 import 'package:shop_proh/models/product.dart';
 
@@ -65,6 +66,7 @@ class _PostsScreenState extends State<PostsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: const Text('Danh sách sản phẩm'),
       ),
       body: products == null

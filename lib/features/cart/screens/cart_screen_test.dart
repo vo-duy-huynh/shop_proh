@@ -82,7 +82,7 @@ class _CartScreenTestState extends State<CartScreenTest> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -90,12 +90,12 @@ class _CartScreenTestState extends State<CartScreenTest> {
               Column(
                 children: user.cart.map((cartItem) {
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 15),
+                    margin: EdgeInsets.symmetric(vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Checkbox(
-                          splashRadius: 20,
+                          splashRadius: 15,
                           activeColor: Color(0xFFFD725A),
                           value: isCheckedList[user.cart.indexOf(cartItem)],
                           onChanged: (value) {
@@ -139,7 +139,7 @@ class _CartScreenTestState extends State<CartScreenTest> {
                             ),
                           ],
                         ),
-                        SizedBox(width: 20),
+                        SizedBox(width: 5),
                         Row(
                           children: [
                             InkWell(
@@ -151,9 +151,9 @@ class _CartScreenTestState extends State<CartScreenTest> {
                               child: Icon(CupertinoIcons.minus,
                                   color: Color(0xFFFD725A)),
                             ),
-                            SizedBox(width: 20),
+                            SizedBox(width: 5),
                             Text(cartItem['quantity'].toString()),
-                            SizedBox(width: 20),
+                            SizedBox(width: 5),
                             InkWell(
                               onTap: () {
                                 increaseQuantity(Product.fromMap(

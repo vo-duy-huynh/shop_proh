@@ -3,6 +3,7 @@ const categoryRouter = express.Router();
 const admin = require("../middlewares/admin");
 const Category = require("../models/category");
 const auth = require("../middlewares/auth");
+var responseHandle = require('../helpers/responseHandle');
 
 categoryRouter.post("/admin/add-category", admin, async (req, res) => {
   try {
@@ -14,11 +15,11 @@ categoryRouter.post("/admin/add-category", admin, async (req, res) => {
     });
     category = await category.save();
     if (!category) {
-      return res.status(400).json({ msg: "Thêm danh mục thất bại!" });
+      return responseHandle.renderResponse(res, false, "Thêm danh mục thất bại!");
     }
     res.json(category);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
@@ -26,11 +27,11 @@ categoryRouter.get("/admin/get-categories", auth, async (req, res) => {
   try {
     const categories = await Category.find({});
     if (!categories) {
-      return res.status(400).json({ msg: "Không có danh mục nào!" });
+      return responseHandle.renderResponse(res, false, "Không có danh mục nào!");
     }
-    res.json(categories);
+    responseHandle.renderResponse(res, true, categories);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
@@ -39,11 +40,11 @@ categoryRouter.delete("/admin/delete-category/:id", admin, async (req, res) => {
     const { id } = req.params;
     const category = await Category.findByIdAndDelete(id);
     if (!category) {
-      return res.status(400).json({ msg: "Xóa danh mục thất bại!" });
+      return responseHandle.renderResponse(res, false, "Xóa danh mục thất bại!");
     }
-    res.json(category);
+    responseHandle.renderResponse(res, true, category);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
@@ -59,35 +60,35 @@ categoryRouter.put("/admin/update-category/:id", admin, async (req, res) => {
         category.description = description;
         category = await category.save();
         if (!category) {
-            return res.status(400).json({ msg: "Cập nhật danh mục thất bại!" });
+            return responseHandle.renderResponse(res, false, "Cập nhật danh mục thất bại!");
         }
-        res.json(category);
+        responseHandle.renderResponse(res, true, category);
     } catch (e) {
-        res.status(500).json({ error: e.message });
+        responseHandle.renderResponse(res, false, e.message);
     }     
 });
-categoryRouter.get("/api/get-top-categories", async (req, res) => {
+categoryRouter.get("/get-top-categories", async (req, res) => {
   try {
     const categories = await Category.find({});
     if (!categories) {
-      return res.status(400).json({ msg: "Không có danh mục nào!" });
+      return responseHandle.renderResponse(res, false, "Không có danh mục nào!");
     }
-    res.json(categories.slice(0, 6));
+    responseHandle.renderResponse(res, true, categories.slice(0, 6));
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
-categoryRouter.get("/api/get-categoryname/:categoryid", async (req, res) => {
+categoryRouter.get("/get-categoryname/:categoryid", async (req, res) => {
   try {
     const { categoryid } = req.params;
     const category = await Category.findById(categoryid);
     if (!category) {
-      return res.status(400).json({ msg: "Không có danh mục nào!" });
+      return responseHandle.renderResponse(res, false, "Không có danh mục nào!");
     }
-    res.json(category.name);
+    responseHandle.renderResponse(res, true, category.name);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 }
 );

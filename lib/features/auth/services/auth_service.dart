@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_proh/common/widgets/bottom_bar.dart';
 import 'package:shop_proh/constants/error_handling.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
+import 'package:shop_proh/constants/responseHandle.dart';
 import 'package:shop_proh/constants/ultils.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
 import 'package:shop_proh/home/screens/home_screen.dart';
@@ -37,7 +38,7 @@ class AuthService {
         wishlist: [],
       );
       http.Response res = await http.post(
-        Uri.parse('$uri/api/signup'),
+        Uri.parse('$uri/api/v1/auth/signup'),
         body: user.toJson(),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -71,7 +72,7 @@ class AuthService {
   }) async {
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/api/login'),
+        Uri.parse('$uri/api/v1/auth/login'),
         body: jsonEncode({
           'email': email,
           'password': password,
@@ -85,11 +86,16 @@ class AuthService {
         response: res,
         context: context,
         onSuccess: () async {
+          showSnackBar(context, 'Đăng nhập thành công!!!');
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          Provider.of<UserProvider>(context, listen: false).setUser(res.body);
-          await saveTokenToStorage(jsonDecode(res.body)['token']);
-          await saveTypeToStorage(jsonDecode(res.body)['type']);
-          await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
+          var responseData = jsonDecode(res.body)['data'];
+          Provider.of<UserProvider>(context, listen: false)
+              .setUser(jsonEncode(responseData));
+          await saveTokenToStorage(responseData['token']);
+          await saveTypeToStorage(responseData['type']);
+          await prefs.setString('x-auth-token', responseData['token']);
+          showSnackBar(context, 'Đăng nhập thành công!!!');
+          print(responseData['type']);
           Navigator.pushNamedAndRemoveUntil(
             context,
             BottomBar.routeName,
@@ -133,15 +139,15 @@ class AuthService {
         prefs.setString('x-auth-token', '');
       }
 
-      var tokenRes = await http.post(
-        Uri.parse('$uri/tokenIsValid'),
+      var tokenRes = await http.get(
+        Uri.parse('$uri/api/v1/auth/tokenIsValid'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': token!
         },
       );
 
-      var response = jsonDecode(tokenRes.body);
+      var response = jsonDecode(tokenRes.body)['success'];
 
       if (response == true) {
         http.Response userRes = await http.get(

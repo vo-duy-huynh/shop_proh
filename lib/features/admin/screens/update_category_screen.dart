@@ -63,6 +63,7 @@ class _UpdateCategoryScreenState extends State<UpdateCategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cập Nhật Danh Mục'),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             icon: Icon(Icons.check),

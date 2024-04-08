@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shop_proh/common/widgets/loader.dart';
 import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/features/account/widgets/top_buttons.dart';
+import 'package:shop_proh/features/product_details/screens/product_details_screen%20copy.dart';
 import 'package:shop_proh/features/product_details/screens/product_details_screen.dart';
 import 'package:shop_proh/features/search/screens/search_screens.dart';
 import 'package:shop_proh/home/services/home_services.dart';
 import 'package:shop_proh/home/widgets/address_box.dart';
-import 'package:shop_proh/home/widgets/carousel_image.dart';
 import 'package:shop_proh/home/widgets/top_categories.dart';
 import 'package:shop_proh/models/product.dart';
 
@@ -123,7 +123,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
                   const SizedBox(height: 10),
                   const TopCategories(),
                   const SizedBox(height: 10),
-                  const CarouselImage(),
+                  // const CarouselImage(),
                   SizedBox(
                     height: 170,
                     child: GridView.builder(

@@ -3,17 +3,18 @@ const productRouter = express.Router();
 const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
 const Category = require("../models/category");
+var responseHandle = require('../helpers/responseHandle');
 
-productRouter.get("/api/products/", auth, async (req, res) => {
+productRouter.get("/products/", auth, async (req, res) => {
   try {
     const products = await Product.find({ category: req.query.category });
-    res.json(products);
+    responseHandle.renderResponse(res, true, products);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
-productRouter.get("/api/products/search/:name", auth, async (req, res) => {
+productRouter.get("/products/search/:name", auth, async (req, res) => {
     try {
       const searchTerm = req.params.name;
       const products = await Product.find({
@@ -26,17 +27,17 @@ productRouter.get("/api/products/search/:name", auth, async (req, res) => {
       });
       if (category) {
         const productList = await Product.find({ category: category._id });
-        res.json(productList);
+        responseHandle.renderResponse(res, true, productList);
       }
       else {
-        res.json(products);
+        responseHandle.renderResponse(res, true, products);
       }
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      responseHandle.renderResponse(res, false, e.message);
     }
   });
 
-productRouter.post("/api/rate-product", auth, async (req, res) => {
+productRouter.post("/rate-product", auth, async (req, res) => {
   try {
     const { id, rating } = req.body;
     let product = await Product.findById(id);
@@ -52,13 +53,13 @@ productRouter.post("/api/rate-product", auth, async (req, res) => {
     };
     product.ratings.push(ratingSchema);
     product = await product.save();
-    res.json(product);
+    responseHandle.renderResponse(res, true, product);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
-productRouter.get("/api/deal-of-day", auth, async (req, res) => {
+productRouter.get("/deal-of-day", auth, async (req, res) => {
   try {
     let products = await Product.find({});
 
@@ -76,34 +77,34 @@ productRouter.get("/api/deal-of-day", auth, async (req, res) => {
       return aSum < bSum ? 1 : -1;
     });
 
-    res.json(products[0]);
+    responseHandle.renderResponse(res, true, products[0]);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 // get all
 
-productRouter.get("/api/all-products", auth, async (req, res) => {
+productRouter.get("/all-products", auth, async (req, res) => {
   try {
     const products = await Product.find({});
-    res.json(products);
+    responseHandle.renderResponse(res, true, products);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
 // fetch product by category
-productRouter.get("/api/products/:category", async (req, res) => {
+productRouter.get("/products/:category", async (req, res) => {
   try {
     // nếu không có category thì lấy tất cả sản phẩm
     if (req.params.category === 'All') {
       const products = await Product.find({});
-      return res.json(products);
+      return responseHandle.renderResponse(res, true, products);
     }
     const products = await Product.find({ category: req.params.category });
-    res.json(products);
+    responseHandle.renderResponse(res, true, products);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 }
 );

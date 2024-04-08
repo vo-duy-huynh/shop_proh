@@ -5,8 +5,9 @@ const bycrypt = require('bcryptjs');
 const authRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const auth = require('../middlewares/auth');
+var responseHandle = require('../helpers/responseHandle');
 
-authRouter.post('/api/signup',async (req, res) => {
+authRouter.post('/signup',async (req, res) => {
     try{
         const {name, email, password } = req.body;
         const existingUser = await User.findOne({ email });
@@ -20,41 +21,40 @@ authRouter.post('/api/signup',async (req, res) => {
             password: passwordHash,
         });
         user = await user.save();
-        res.json(user);
+        responseHandle.renderResponse(res, true, user);
+        // res.json(user);
     }
     catch(err){
-        res.status(500).send(err);
+        responseHandle.renderResponse(res, false, err.message);
+        // res.status(500).send(err);
     }
 });
 
-authRouter.post('/api/login', async (req, res) => {
+authRouter.post('/login', async (req, res) => {
     try{
         const { email, password } = req.body;
-        // so sánh password
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'Email không tồn tại!' });
+            responseHandle.renderResponse(res, false, 'Email không tồn tại!');
         }
         const isMatch = await bycrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: 'Mật khẩu không đúng!' });
+            responseHandle.renderResponse(res, false, 'Mật khẩu không đúng!');
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.json({
+        responseHandle.renderResponse(res, true, {
             token,
             ...user._doc,
         });
-
-
     }
     catch(err){
-        res.status(500).send(err);
+        responseHandle.renderResponse(res, false, err.message);
     }
 }
 );
 
-authRouter.get('/api/tokenIsValid', async (req, res) => {
+authRouter.get('/tokenIsValid', async (req, res) => {
     try{
         const token = req.header('x-auth-token');
         if (!token) return res.json(false);
@@ -62,10 +62,10 @@ authRouter.get('/api/tokenIsValid', async (req, res) => {
         if (!verified) return res.json(false);
         const user =await User.findById(verified.id);
         if (!user) return res.json(false);
-        return res.json(true);
+        return responseHandle.renderResponse(res, true, true);
     }
     catch(err){
-        res.status(500).send(err);
+        responseHandle.renderResponse(res, false, err.message);
     }
 });
 

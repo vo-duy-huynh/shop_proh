@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shop_proh/features/account/widgets/orders.dart';
 import 'package:shop_proh/features/admin/screens/add_category_screen.dart';
 import 'package:shop_proh/features/admin/screens/admin_categories_screen.dart';
+import 'package:shop_proh/features/admin/screens/orders_screen.dart';
 import 'package:shop_proh/features/admin/screens/posts_screen.dart';
 import 'package:shop_proh/features/auth/services/auth_service.dart';
 
@@ -105,7 +107,17 @@ class _DashBoardAdminScreenState extends State<DashBoardAdminScreen> {
                       Colors.orange,
                     ),
                   ),
-                  itemDashboard('Orders', CupertinoIcons.cart, Colors.green),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const OrdersScreen()),
+                      );
+                    },
+                    child: itemDashboard(
+                        'Orders', CupertinoIcons.cart, Colors.green),
+                  ),
                   itemDashboard('Users', CupertinoIcons.person_2, Colors.red),
                   itemDashboard(
                       'Charts', CupertinoIcons.chart_bar_square, Colors.purple),

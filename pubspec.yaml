@@ -47,6 +47,7 @@ dependencies:
   intl: ^0.18.0
   pay: ^1.1.0
   flutter_secure_storage: ^9.0.0
+  fan_carousel_image_slider: ^0.1.2
 
 dev_dependencies:
   flutter_test:

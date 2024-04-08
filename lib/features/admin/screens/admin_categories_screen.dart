@@ -55,6 +55,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Danh Mục Sản Phẩm'),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             icon: Icon(Icons.add),

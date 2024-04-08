@@ -19,7 +19,7 @@ class CartServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/api/add-to-cart'),
+        Uri.parse('$uri/api/v1/user/add-to-cart'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -35,7 +35,7 @@ class CartServices {
         context: context,
         onSuccess: () {
           User user =
-              userProvider.user.copyWith(cart: jsonDecode(res.body)['cart']);
+              userProvider.user.copyWith(cart: jsonDecode(res.body)['data']['cart']);
           userProvider.setUserFromModel(user);
         },
       );
@@ -52,7 +52,7 @@ class CartServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/api/add-to-wishlist'),
+        Uri.parse('$uri/api/v1/user/add-to-wishlist'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -68,7 +68,7 @@ class CartServices {
         context: context,
         onSuccess: () {
           User user = userProvider.user
-              .copyWith(wishlist: jsonDecode(res.body)['wishlist']);
+              .copyWith(wishlist: jsonDecode(res.body)['data']['wishlist']);
           userProvider.setUserFromModel(user);
         },
       );
@@ -85,7 +85,7 @@ class CartServices {
 
     try {
       http.Response res = await http.delete(
-        Uri.parse('$uri/api/remove-from-cart/${product.id}'),
+        Uri.parse('$uri/api/v1/user/remove-from-cart/${product.id}'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -97,7 +97,7 @@ class CartServices {
         context: context,
         onSuccess: () {
           User user =
-              userProvider.user.copyWith(cart: jsonDecode(res.body)['cart']);
+              userProvider.user.copyWith(cart: jsonDecode(res.body)['data']['cart']);
           userProvider.setUserFromModel(user);
         },
       );

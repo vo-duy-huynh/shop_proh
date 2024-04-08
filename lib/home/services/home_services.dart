@@ -18,22 +18,23 @@ class HomeServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Product> productList = [];
     try {
-      http.Response res = await http
-          .get(Uri.parse('$uri/api/products?category=$category'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+          Uri.parse('$uri/api/v1/product/products?category=$category'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          });
 
       // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             productList.add(
               Product.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );
@@ -55,7 +56,7 @@ class HomeServices {
     String name = '';
     try {
       http.Response res = await http
-          .get(Uri.parse('$uri/api/get-categoryname/${categoryId}'), headers: {
+          .get(Uri.parse('$uri/api/v1/category/get-categoryname/${categoryId}'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -65,7 +66,7 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          name = jsonDecode(res.body);
+          name = jsonDecode(res.body)['data'];
         },
       );
     } catch (e) {
@@ -82,7 +83,7 @@ class HomeServices {
     List<Product> productList = [];
     try {
       http.Response res = await http
-          .get(Uri.parse('$uri/api/products/${categoryId}'), headers: {
+          .get(Uri.parse('$uri/api/v1/product/products/${categoryId}'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -92,11 +93,11 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             productList.add(
               Product.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );
@@ -124,7 +125,7 @@ class HomeServices {
 
     try {
       http.Response res =
-          await http.get(Uri.parse('$uri/api/deal-of-day'), headers: {
+          await http.get(Uri.parse('$uri/api/v1/product/deal-of-day'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -133,7 +134,7 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          product = Product.fromJson(res.body);
+          product = Product.fromJson(jsonEncode(jsonDecode(res.body)['data']));
         },
       );
     } catch (e) {
@@ -149,7 +150,7 @@ class HomeServices {
     List<Product> productList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$uri/api/all-products'), headers: {
+          await http.get(Uri.parse('$uri/api/v1/product/all-products'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -159,11 +160,11 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             productList.add(
               Product.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );
@@ -183,7 +184,7 @@ class HomeServices {
     List<Category> categoryList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$uri/api/get-top-categories'), headers: {
+          await http.get(Uri.parse('$uri/api/v1/category/get-top-categories'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -193,11 +194,11 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             categoryList.add(
               Category.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );
@@ -217,7 +218,7 @@ class HomeServices {
     List<Category> categoryList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-categories'), headers: {
+          await http.get(Uri.parse('$uri/api/v1/category/admin/get-categories'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -227,11 +228,11 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             categoryList.add(
               Category.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );

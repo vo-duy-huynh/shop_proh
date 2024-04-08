@@ -4,8 +4,9 @@ const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
 const User = require("../models/user");
 const Order = require("../models/order");
+var responseHandle = require('../helpers/responseHandle');
 
-userRouter.post("/api/add-to-cart", auth, async (req, res) => {
+userRouter.post("/add-to-cart", auth, async (req, res) => {
   try {
     const { id } = req.body;
     const product = await Product.findById(id);
@@ -31,13 +32,13 @@ userRouter.post("/api/add-to-cart", auth, async (req, res) => {
       }
     }
     user = await user.save();
-    res.json(user);
+    responseHandle.renderResponse(res, true, user);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
-userRouter.delete("/api/remove-from-cart/:id", auth, async (req, res) => {
+userRouter.delete("/remove-from-cart/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Product.findById(id);
@@ -53,13 +54,13 @@ userRouter.delete("/api/remove-from-cart/:id", auth, async (req, res) => {
       }
     }
     user = await user.save();
-    res.json(user);
+    responseHandle.renderResponse(res, true, user);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
-userRouter.post("/api/add-to-wishlist", auth, async (req, res) => {
+userRouter.post("/add-to-wishlist", auth, async (req, res) => {
   try {
     const { id } = req.body;
     const product = await Product.findById(id);
@@ -79,24 +80,24 @@ userRouter.post("/api/add-to-wishlist", auth, async (req, res) => {
     }
 
     user = await user.save();
-    res.json(user);
+    responseHandle.renderResponse(res, true, user);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
-userRouter.post("/api/save-user-address", auth, async (req, res) => {
+userRouter.post("/save-user-address", auth, async (req, res) => {
   try {
     const { address } = req.body;
     let user = await User.findById(req.user);
     user.address = address;
     user = await user.save();
-    res.json(user);
+    responseHandle.renderResponse(res, true, user);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
-userRouter.post("/api/order", auth, async (req, res) => {
+userRouter.post("/order", auth, async (req, res) => {
   try {
     const { cart, totalPrice, address, date, phoneNumber } = req.body;
     let products = [];
@@ -108,9 +109,7 @@ userRouter.post("/api/order", auth, async (req, res) => {
         products.push({ product, quantity: cart[i].quantity });
         await product.save();
       } else {
-        return res
-          .status(400)
-          .json({ msg: `${product.name} is out of stock!` });
+        return responseHandle.renderResponse(res, false, `${product.name} is out of stock!`);
       }
     }
 
@@ -128,34 +127,34 @@ userRouter.post("/api/order", auth, async (req, res) => {
       orderedAt: new Date().getTime(),
     });
     order = await order.save();
-    res.json(order);
+    responseHandle.renderResponse(res, true, order);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
-userRouter.get("/api/orders/me", auth, async (req, res) => {
+userRouter.get("/orders/me", auth, async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user });
-    res.json(orders);
+    responseHandle.renderResponse(res, true, orders);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
 
 // get cart of user'
-userRouter.get("/api/cart", auth, async (req, res) => {
+userRouter.get("/cart", auth, async (req, res) => {
   try {
     let user = await User.findById(req.user);
-    res.json(user.cart);
+    responseHandle.renderResponse(res, true, user.cart);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
 // add to wishlist
-userRouter.post("/api/add-to-wishlist", auth, async (req, res) => {
+userRouter.post("/add-to-wishlist", auth, async (req, res) => {
   try {
     const { id } = req.body;
     const product = await Product.findById(id);
@@ -181,8 +180,17 @@ userRouter.post("/api/add-to-wishlist", auth, async (req, res) => {
       }
     }
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    responseHandle.renderResponse(res, false, e.message);
   }
 });
 
+// get user name by userId
+userRouter.get("/users/:id", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    responseHandle.renderResponse(res, true, user);
+  } catch (e) {
+    responseHandle.renderResponse(res, false, e.message);
+  }
+});
 module.exports = userRouter;

@@ -19,7 +19,7 @@ class ProductDetailsServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/api/add-to-cart'),
+        Uri.parse('$uri/api/v1/user/add-to-cart'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -34,8 +34,8 @@ class ProductDetailsServices {
         response: res,
         context: context,
         onSuccess: () {
-          User user =
-              userProvider.user.copyWith(cart: jsonDecode(res.body)['cart']);
+          User user = userProvider.user
+              .copyWith(cart: jsonDecode(res.body)['data']['cart']);
           userProvider.setUserFromModel(user);
           showSnackBar(
             context,
@@ -57,7 +57,7 @@ class ProductDetailsServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/api/add-to-wishlist'),
+        Uri.parse('$uri/api/v1/user/add-to-wishlist'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -73,7 +73,7 @@ class ProductDetailsServices {
         context: context,
         onSuccess: () {
           User user = userProvider.user
-              .copyWith(wishlist: jsonDecode(res.body)['wishlist']);
+              .copyWith(wishlist: jsonDecode(res.body)['data']['wishlist']);
           userProvider.setUserFromModel(user);
         },
       );
@@ -91,7 +91,7 @@ class ProductDetailsServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/api/rate-product'),
+        Uri.parse('$uri/api/v1/product/rate-product'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
