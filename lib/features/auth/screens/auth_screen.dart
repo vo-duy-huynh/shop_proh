@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_proh/features/auth/screens/forgotpass_screen.dart';
 import 'package:shop_proh/features/auth/screens/register_screen.dart';
 import 'package:shop_proh/features/auth/services/auth_service.dart';
 import 'package:shop_proh/features/auth/widgets/gradient_button.dart';
@@ -41,6 +42,9 @@ class _AuthScreenState extends State<AuthScreen> {
       email: _emailController.text,
       password: _passwordController.text,
     );
+  }
+  void navigateToForgotPassword() {
+    Navigator.of(context).pushNamed(ForgotPasswordScreen.routeName);
   }
 
   @override
@@ -88,6 +92,32 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 20),
               GradientButton(text: 'Đăng nhập', onPressed: signIn),
+              const SizedBox(height: 20),
+              Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Bạn quên mật khẩu?',
+                  style: TextStyle(
+                    color: Pallete.whiteColor,
+                    fontSize: 17,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Thêm hàm xử lý khi người dùng nhấn vào nút "Quên mật khẩu" ở đây
+                    navigateToForgotPassword();
+                  },
+                  child: const Text(
+                    'Quên mật khẩu',
+                    style: TextStyle(
+                      color: Pallete.gradient1,
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ],
+            ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

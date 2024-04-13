@@ -7,6 +7,7 @@ import 'package:shop_proh/home/widgets/deal_of_day.dart';
 import 'package:shop_proh/home/widgets/top_categories.dart';
 import 'package:shop_proh/models/category.dart';
 import 'package:shop_proh/models/product.dart';
+import 'package:shop_proh/home/widgets/carousel_image.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
@@ -148,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 10),
             const TopCategories(),
             const SizedBox(height: 10),
-            // const CarouselImage(),
+            const CarouselImage(),
             const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,

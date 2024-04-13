@@ -1,9 +1,9 @@
-const express = require("express");
-const adminRouter = express.Router();
-const admin = require("../middlewares/admin");
-const  {Product}  = require("../models/product");
-const Order = require("../models/order");
-const Category = require("../models/category");
+var express = require("express");
+var adminRouter = express.Router();
+var admin = require("../middlewares/admin");
+var  {Product}  = require("../models/product");
+var Order = require("../models/order");
+var Category = require("../models/category");
 var responseHandle = require('../helpers/responseHandle');
 // const Order = require("../models/order");
 // const { PromiseProvider } = require("mongoose");

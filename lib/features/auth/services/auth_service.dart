@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,6 +13,8 @@ import 'package:shop_proh/constants/globalvariable.dart';
 import 'package:shop_proh/constants/responseHandle.dart';
 import 'package:shop_proh/constants/ultils.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
+import 'package:shop_proh/features/auth/screens/otp_screen.dart';
+import 'package:shop_proh/features/auth/screens/resetpassword_screen.dart';
 import 'package:shop_proh/home/screens/home_screen.dart';
 import 'package:shop_proh/main.dart';
 import 'package:shop_proh/models/user.dart';
@@ -99,6 +102,106 @@ class AuthService {
           Navigator.pushNamedAndRemoveUntil(
             context,
             BottomBar.routeName,
+            (route) => false,
+          );
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void forGotPassword({
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/v1/auth/forgotPassword'),
+        body: jsonEncode({
+          'email': email,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      // ignore: use_build_context_synchronously
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Đã gửi email xác nhận!!!');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            OtpScreen.routeName,
+            (route) => false,
+          );
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void otpCheck({
+    required BuildContext context,
+    required String otp,
+  }) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/v1/auth/resetpassword'),
+        body: jsonEncode({
+          'otp': otp,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      // ignore: use_build_context_synchronously
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Xác nhận thành công!!!');
+          var responseData = jsonDecode(res.body)['data'];
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            ResetPassWordScreen.routeName,
+            arguments: responseData['email'],
+            (route) => false,
+          );
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void resetPassWord({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      http.Response res = await http.put(
+        Uri.parse('$uri/api/v1/auth/resetPassword'),
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      // ignore: use_build_context_synchronously
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Đổi mật khẩu thành công!!!');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AuthScreen.routeName,
             (route) => false,
           );
         },

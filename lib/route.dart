@@ -6,7 +6,10 @@ import 'package:shop_proh/features/admin/screens/add_product_screen.dart';
 import 'package:shop_proh/features/admin/screens/update_category_screen.dart';
 import 'package:shop_proh/features/admin/screens/update_product_screen.dart';
 import 'package:shop_proh/features/auth/screens/auth_screen.dart';
+import 'package:shop_proh/features/auth/screens/forgotpass_screen.dart';
+import 'package:shop_proh/features/auth/screens/otp_screen.dart';
 import 'package:shop_proh/features/auth/screens/register_screen.dart';
+import 'package:shop_proh/features/auth/screens/resetpassword_screen.dart';
 import 'package:shop_proh/features/cart/services/cart_services.dart';
 import 'package:shop_proh/features/order_details/screens/order_details.dart';
 import 'package:shop_proh/features/product_details/screens/product_details_screen%20copy.dart';
@@ -14,6 +17,7 @@ import 'package:shop_proh/features/product_details/screens/product_details_scree
 import 'package:shop_proh/features/search/screens/search_screens.dart';
 import 'package:shop_proh/home/screens/all_products_screen.dart';
 import 'package:shop_proh/home/screens/category_deals_screen.dart';
+import 'package:shop_proh/home/screens/chat_screen.dart';
 import 'package:shop_proh/home/screens/home_screen.dart';
 import 'package:shop_proh/models/category.dart';
 import 'package:shop_proh/models/order.dart';
@@ -30,6 +34,24 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const RegisterScreen(),
+      );
+    case ForgotPasswordScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ForgotPasswordScreen(),
+      );
+    case OtpScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const OtpScreen(),
+      );
+    case ResetPassWordScreen.routeName:
+      var email = routeSettings.arguments as String;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => ResetPassWordScreen(
+          email: email,
+        ),
       );
     case HomeScreen.routeName:
       return MaterialPageRoute(
@@ -112,6 +134,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => OrderDetailScreen(
           order: order,
         ),
+      );
+    case ChatScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ChatScreen(),
       );
     default:
       return MaterialPageRoute(

@@ -1,9 +1,9 @@
-const express = require("express");
-const userRouter = express.Router();
-const auth = require("../middlewares/auth");
-const { Product } = require("../models/product");
-const User = require("../models/user");
-const Order = require("../models/order");
+var express = require("express");
+var userRouter = express.Router();
+var auth = require("../middlewares/auth");
+var { Product } = require("../models/product");
+var User = require("../models/user");
+var Order = require("../models/order");
 var responseHandle = require('../helpers/responseHandle');
 
 userRouter.post("/add-to-cart", auth, async (req, res) => {
@@ -188,6 +188,19 @@ userRouter.post("/add-to-wishlist", auth, async (req, res) => {
 userRouter.get("/users/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
+    responseHandle.renderResponse(res, true, user);
+  } catch (e) {
+    responseHandle.renderResponse(res, false, e.message);
+  }
+});
+//tạo 1 api ảo xuất 2 người dùng
+userRouter.get("/users", async (req, res) => {
+  try {
+    //tạo 1 json user
+    const user = {
+      name: "Nguyen Van A",
+      email: "aa@"
+    }
     responseHandle.renderResponse(res, true, user);
   } catch (e) {
     responseHandle.renderResponse(res, false, e.message);

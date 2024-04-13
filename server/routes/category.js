@@ -1,8 +1,8 @@
-const express = require("express");
-const categoryRouter = express.Router();
-const admin = require("../middlewares/admin");
-const Category = require("../models/category");
-const auth = require("../middlewares/auth");
+var express = require("express");
+var categoryRouter = express.Router();
+var admin = require("../middlewares/admin");
+var Category = require("../models/category");
+var auth = require("../middlewares/auth");
 var responseHandle = require('../helpers/responseHandle');
 
 categoryRouter.post("/admin/add-category", admin, async (req, res) => {
@@ -17,7 +17,7 @@ categoryRouter.post("/admin/add-category", admin, async (req, res) => {
     if (!category) {
       return responseHandle.renderResponse(res, false, "Thêm danh mục thất bại!");
     }
-    res.json(category);
+    responseHandle.renderResponse(res, true, category);
   } catch (e) {
     responseHandle.renderResponse(res, false, e.message);
   }
