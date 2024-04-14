@@ -17,7 +17,7 @@ class AccountServices {
     List<Order> orderList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$uri/api/orders/me'), headers: {
+          await http.get(Uri.parse('$uri/api/v1/user/orders/me'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -26,11 +26,11 @@ class AccountServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['data'].length; i++) {
             orderList.add(
               Order.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  jsonDecode(res.body)['data'][i],
                 ),
               ),
             );

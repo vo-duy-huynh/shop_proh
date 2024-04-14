@@ -20,19 +20,32 @@ void main() {
         ChangeNotifierProvider(
             create: (context) => ThemeProvider(isDark: false)),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+class MyApp extends StatelessWidget {
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Shop Proh',
+      home: Scaffold(
+        // Đặt MaterialApp trong một Scaffold
+        body:
+            _MyAppBody(), // Bạn có thể thay đổi thành tên widget bạn muốn sử dụng
+      ),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppBody extends StatefulWidget {
+  @override
+  State<_MyAppBody> createState() => _MyAppBodyState();
+}
+
+class _MyAppBodyState extends State<_MyAppBody> {
   final AuthService authService = AuthService();
 
   @override

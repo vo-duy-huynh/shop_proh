@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shop_proh/common/widgets/loader.dart';
+import 'package:shop_proh/features/product_details/screens/product_details_screen%20copy.dart';
 import 'package:shop_proh/features/product_details/screens/product_details_screen.dart';
 import 'package:shop_proh/home/screens/all_products_screen.dart';
 import 'package:shop_proh/home/services/home_services.dart';

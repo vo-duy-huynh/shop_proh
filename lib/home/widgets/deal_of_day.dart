@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_proh/common/widgets/loader.dart';
+import 'package:shop_proh/features/product_details/screens/product_details_screen%20copy.dart';
 import 'package:shop_proh/features/product_details/screens/product_details_screen.dart';
 import 'package:shop_proh/features/product_details/services/product_details_services.dart';
 import 'package:shop_proh/home/screens/all_products_screen.dart';

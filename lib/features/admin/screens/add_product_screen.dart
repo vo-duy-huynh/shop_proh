@@ -82,10 +82,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
               gradient: GlobalVariables.appBarGradient,
             ),
           ),
+          backgroundColor: Colors.blue,
           title: const Text(
             'Thêm Sản Phẩm',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 20,
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_proh/features/account/screens/account_screen.dart';
 import 'package:shop_proh/features/cart/screens/cart_screen_test.dart';
 import 'package:shop_proh/features/cart/screens/wish_list_screen.dart';
+import 'package:shop_proh/home/screens/chat_screen.dart';
 import 'package:shop_proh/home/screens/home_screen.dart';
 import 'package:shop_proh/providers/user_provider.dart';
 import 'package:badges/badges.dart' as badge;
@@ -34,6 +35,7 @@ class _BottomBarState extends State<BottomBar> {
     const CartScreenTest(),
     const WishListScreen(),
     const AccountScreen(),
+    const ChatScreen(),
   ];
 
   void updatePage(int index) {
@@ -86,11 +88,11 @@ class _BottomBarState extends State<BottomBar> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          SystemNavigator.pop();
+          Navigator.pushNamed(context, ChatScreen.routeName);
         },
         backgroundColor: const Color(0xFFFD725A),
         shape: const CircleBorder(),
-        child: const Icon(Icons.qr_code_scanner_outlined),
+        child: const Icon(Icons.chat_bubble_outline),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,

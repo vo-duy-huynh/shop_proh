@@ -19,7 +19,7 @@ class AddressServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/api/save-user-address'),
+        Uri.parse('$uri/api/v1/user/save-user-address'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -34,7 +34,7 @@ class AddressServices {
         context: context,
         onSuccess: () {
           User user = userProvider.user.copyWith(
-            address: jsonDecode(res.body)['address'],
+            address: jsonDecode(res.body)['data']['address'],
           );
 
           userProvider.setUserFromModel(user);
@@ -56,7 +56,7 @@ class AddressServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      http.Response res = await http.post(Uri.parse('$uri/api/order'),
+      http.Response res = await http.post(Uri.parse('$uri/api/v1/user/order'),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
@@ -94,7 +94,7 @@ class AddressServices {
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/admin/delete-product'),
+        Uri.parse('$uri/api/v1/admin/admin/delete-product'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,

@@ -59,7 +59,7 @@ class _WishListScreenState extends State<WishListScreen> {
             children: [
               // Danh sách sản phẩm
               Column(
-                children: user.cart.map((cartItem) {
+                children: user.wishlist.map((cartItem) {
                   return Container(
                     margin: EdgeInsets.symmetric(vertical: 15),
                     child: Row(

@@ -11,19 +11,20 @@ import 'package:shop_proh/features/search/screens/search_screens.dart';
 import 'package:shop_proh/models/product.dart';
 import 'package:shop_proh/providers/user_provider.dart';
 
-class ProductDetailScreen extends StatefulWidget {
+class ProductDetailScreenTest extends StatefulWidget {
   static const String routeName = '/product-details';
   final Product product;
-  const ProductDetailScreen({
+  const ProductDetailScreenTest({
     Key? key,
     required this.product,
   }) : super(key: key);
 
   @override
-  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+  State<ProductDetailScreenTest> createState() =>
+      _ProductDetailScreenTestState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenTestState extends State<ProductDetailScreenTest> {
   final numberFormat = NumberFormat("#,##0", "en_US");
   final ProductDetailsServices productDetailsServices =
       ProductDetailsServices();
