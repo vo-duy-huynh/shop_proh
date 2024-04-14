@@ -27,6 +27,13 @@ const userSchema = mongoose.Schema({
   password: {
     required: true,
     type: String,
+    validate: {
+      validator: (value) => {
+        const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/gm;
+        return value.match(re);
+      },
+      message: "Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ thường, chữ hoa và số",
+    }
   },
   address: {
     type: String,

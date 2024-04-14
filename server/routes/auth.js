@@ -8,6 +8,7 @@ var auth = require('../middlewares/auth');
 var otpGenerator = require("otp-generator");
 let sendmail = require('../helpers/sendMail');
 var responseHandle = require('../helpers/responseHandle');
+const e = require('express');
 
 
 authRouter.post('/changepassword', auth, async function (req, res, next) {
@@ -88,7 +89,8 @@ authRouter.post('/signup',async (req, res) => {
         const {name, email, password } = req.body;
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ msg: 'Email đã tồn tại!' });
+            responseHandle.renderResponse(res, false, 'Email đã tồn tại!');
+            return;
         }
         let user = new User({
             name,
@@ -109,10 +111,12 @@ authRouter.post('/login', async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) {
             responseHandle.renderResponse(res, false, 'Email không tồn tại!');
+            return;
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             responseHandle.renderResponse(res, false, 'Mật khẩu không đúng!');
+            return;
         }
 
         let token = user.genJWT();
@@ -130,11 +134,20 @@ authRouter.post('/login', async (req, res) => {
 authRouter.get('/tokenIsValid', async (req, res) => {
     try{
         const token = req.header('x-auth-token');
-        if (!token) return responseHandle.renderResponse(res, false, '');
+        if (!token) {
+            responseHandle.renderResponse(res, false, 'Token không hợp lệ!');
+            return;
+        }
         const verified = jwt.verify(token, process.env.JWT_SECRET);
-        if (!verified) return responseHandle.renderResponse(res, false, '');
+        if (!verified){
+            responseHandle.renderResponse(res, false, 'Token không hợp lệ!');
+            return;
+        }
         const user =await User.findById(verified.id);
-        if (!user) return responseHandle.renderResponse(res, false, 'User không tồn tại!');
+        if (!user){
+            responseHandle.renderResponse(res, false, 'User không tồn tại!');
+            return;
+        }
         return responseHandle.renderResponse(res, true, true);
     }
     catch(err){
